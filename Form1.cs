@@ -35,24 +35,23 @@ namespace AutoPixAiCreditClaimer
 
                     /* Login */
                     driver.Navigate().GoToUrl("https://pixai.art/login");
-                    IWebElement loginbtn;
-                    IWebElement emailInput;
-                    IWebElement passInput;
                     while (true)
                     {
                         try
                         {
-                            emailInput = driver.FindElement(By.Id("email-input"));
-                            passInput = driver.FindElement(By.Id("password-input"));
-                            loginbtn = driver.FindElement(By.Id(":r0:"));
+                            try
+                            {
+                                driver.FindElement(By.CssSelector("button.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.sc-hHTYSt.dnTtlO.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.pt-2.text-primary-light.underline.opacity-80")).Click();
+                            }
+                            catch { }
+                            driver.FindElement(By.Id("email-input")).SendKeys(user.email);
+                            driver.FindElement(By.Id("password-input")).SendKeys(user.pass);
+                            driver.FindElement(By.Id(":r0:")).Submit();
                             break;
                         }
                         catch { }
                         Thread.Sleep(49);//Minimum CPU usage        
                     }
-                    emailInput.SendKeys(user.email);
-                    passInput.SendKeys(user.pass);
-                    loginbtn.Submit();
 
                     /* Claim daily */
                     while (true)
@@ -67,8 +66,8 @@ namespace AutoPixAiCreditClaimer
                             {
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
                             }
-                            driver.FindElement(By.CssSelector("li.sc-dkrFOg.eQVywz.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-fHSyak.iTNXVP.MuiMenuItem-root.MuiMenuItem-gutters")).Click();
-                            driver.FindElement(By.CssSelector("div.sc-kDvujY.kBxslW.sc-fbYMXx.MuiPopover-root.sc-fXqpFg.gUdnEO.MuiMenu-root.MuiModal-root > div.sc-jrcTuL.jacrvR.MuiBackdrop-root.MuiBackdrop-invisible.sc-ipEyDJ.gqbUTC.MuiModal-backdrop")).Click();
+                            driver.FindElement(By.CssSelector("li.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-fHSyak.iTNXVP.MuiMenuItem-root.MuiMenuItem-gutters")).Click();
+                            driver.FindElement(By.CssSelector("div.sc-jSUZER.icZvms.sc-fbYMXx.MuiPopover-root.sc-fXqpFg.gUdnEO.MuiMenu-root.MuiModal-root > div.sc-eDvSVe.leIUKU.MuiBackdrop-root.MuiBackdrop-invisible.sc-gKPRtg.ioznrs.MuiModal-backdrop")).Click();
                             driver.FindElement(By.CssSelector("a.flex.gap-2.items-center.font-bold.font-quicksand.text-theme-primary")).Click();
                             try
                             {
