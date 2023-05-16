@@ -22,7 +22,6 @@ namespace AutoPixAiCreditClaimer
                 pass = "pass",
             });
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Hide();
@@ -66,7 +65,7 @@ namespace AutoPixAiCreditClaimer
                             {
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
                             }
-                            driver.FindElement(By.CssSelector("li.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-fHSyak.iTNXVP.MuiMenuItem-root.MuiMenuItem-gutters")).Click();
+                            driver.FindElement(By.CssSelector("li.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-evzXkX.diRdUb.MuiMenuItem-root.MuiMenuItem-gutters[tabindex='0']")).Click();
                             driver.FindElement(By.CssSelector("div.sc-jSUZER.icZvms.sc-fbYMXx.MuiPopover-root.sc-fXqpFg.gUdnEO.MuiMenu-root.MuiModal-root > div.sc-eDvSVe.leIUKU.MuiBackdrop-root.MuiBackdrop-invisible.sc-gKPRtg.ioznrs.MuiModal-backdrop")).Click();
                             driver.FindElement(By.CssSelector("a.flex.gap-2.items-center.font-bold.font-quicksand.text-theme-primary")).Click();
                             try
@@ -97,6 +96,11 @@ namespace AutoPixAiCreditClaimer
         {
             public string email { get; set; }
             public string pass { get; set; }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
