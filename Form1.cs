@@ -59,28 +59,35 @@ namespace AutoPixAiCreditClaimer
                         {
                             try
                             {
+                                //if profile have image
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > img")).Click();
                             }
                             catch
                             {
+                                //if profile not have image
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
                             }
-                            driver.FindElement(By.CssSelector("li.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-evzXkX.diRdUb.MuiMenuItem-root.MuiMenuItem-gutters[tabindex='0']")).Click();
+                            //profile button class
+                            driver.FindElement(By.CssSelector("li.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-brePNt.bOBcly.MuiMenuItem-root.MuiMenuItem-gutters[tabindex='0']")).Click();
+                            //exit menu
                             driver.FindElement(By.CssSelector("div.sc-jSUZER.icZvms.sc-fbYMXx.MuiPopover-root.sc-fXqpFg.gUdnEO.MuiMenu-root.MuiModal-root > div.sc-eDvSVe.leIUKU.MuiBackdrop-root.MuiBackdrop-invisible.sc-gKPRtg.ioznrs.MuiModal-backdrop")).Click();
+                            //open credit page
                             driver.FindElement(By.CssSelector("a.flex.gap-2.items-center.font-bold.font-quicksand.text-theme-primary")).Click();
                             try
                             {
+                                //claim credit
                                 driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button")).Click();
                                 break;
                             }
                             catch
                             {
+                                //check credit is claimed?
                                 var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div")).Text;
                                 Debug.WriteLine(text);
                                 if (text != null) break;
                             }
                         }
-                        catch {/* MessageBox.Show("Login error");*/ }
+                        catch {/* MessageBox.Show("error");*/ }
                         Thread.Sleep(49);//Minimum CPU usage        
                     }
 
