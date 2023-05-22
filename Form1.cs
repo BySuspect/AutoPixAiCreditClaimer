@@ -45,7 +45,7 @@ namespace AutoPixAiCreditClaimer
                             catch { }
                             driver.FindElement(By.Id("email-input")).SendKeys(user.email);
                             driver.FindElement(By.Id("password-input")).SendKeys(user.pass);
-                            driver.FindElement(By.Id(":r0:")).Submit();
+                            driver.FindElement(By.CssSelector("form.flex.flex-col.gap-4 > button")).Submit();
                             break;
                         }
                         catch { }
@@ -87,7 +87,7 @@ namespace AutoPixAiCreditClaimer
                                 if (text != null) break;
                             }
                         }
-                        catch {/* MessageBox.Show("error");*/ }
+                        catch { }
                         Thread.Sleep(49);//Minimum CPU usage        
                     }
 
@@ -103,11 +103,6 @@ namespace AutoPixAiCreditClaimer
         {
             public string email { get; set; }
             public string pass { get; set; }
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
     }
 }
