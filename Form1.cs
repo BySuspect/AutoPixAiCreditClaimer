@@ -27,75 +27,115 @@ namespace AutoPixAiCreditClaimer
             this.Hide();
             foreach (var user in UserList)
             {
+                IWebDriver driver = new ChromeDriver();
 
-                if (true)
+                /* Login */
+                driver.Navigate().GoToUrl("https://pixai.art/login");
+                while (true)
                 {
-                    IWebDriver driver = new ChromeDriver();
-
-                    /* Login */
-                    driver.Navigate().GoToUrl("https://pixai.art/login");
-                    while (true)
+                    try
                     {
                         try
                         {
-                            try
-                            {
-                                driver.FindElement(By.CssSelector("button.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.sc-hHTYSt.dnTtlO.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.pt-2.text-primary-light.underline.opacity-80")).Click();
-                            }
-                            catch { }
-                            driver.FindElement(By.Id("email-input")).SendKeys(user.email);
-                            driver.FindElement(By.Id("password-input")).SendKeys(user.pass);
-                            driver.FindElement(By.CssSelector("form.flex.flex-col.gap-4 > button")).Submit();
-                            break;
+                            driver.FindElement(By.CssSelector("div[id='root'] > div > button")).Click();
                         }
                         catch { }
-                        Thread.Sleep(49);//Minimum CPU usage        
+                        driver.FindElement(By.Id("email-input")).SendKeys(user.email);
+                        driver.FindElement(By.Id("password-input")).SendKeys(user.pass);
+                        driver.FindElement(By.Id(":r0:")).Submit();
+                        break;
                     }
+                    catch { }
+                    Thread.Sleep(49);//Minimum CPU usage        
+                }
 
-                    /* Claim daily */
+                /* Claim daily */
+                try
+                {
                     while (true)
                     {
                         try
                         {
+                            //if profile have image
+                            driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > img")).Click();
+                            break;
+                        }
+                        catch
+                        {
                             try
-                            {
-                                //if profile have image
-                                driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > img")).Click();
-                            }
-                            catch
                             {
                                 //if profile not have image
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
-                            }
-                            //profile button class
-                            driver.FindElement(By.CssSelector("li.sc-dIfARi.gbCagB.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.sc-brePNt.bOBcly.MuiMenuItem-root.MuiMenuItem-gutters[tabindex='0']")).Click();
-                            //exit menu
-                            driver.FindElement(By.CssSelector("div.sc-jSUZER.icZvms.sc-fbYMXx.MuiPopover-root.sc-fXqpFg.gUdnEO.MuiMenu-root.MuiModal-root > div.sc-eDvSVe.leIUKU.MuiBackdrop-root.MuiBackdrop-invisible.sc-gKPRtg.ioznrs.MuiModal-backdrop")).Click();
-                            //open credit page
-                            driver.FindElement(By.CssSelector("a.flex.gap-2.items-center.font-bold.font-quicksand.text-theme-primary")).Click();
-                            try
-                            {
-                                //claim credit
-                                driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button")).Click();
                                 break;
                             }
-                            catch
-                            {
-                                //check credit is claimed?
-                                var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div")).Text;
-                                Debug.WriteLine(text);
-                                if (text != null) break;
-                            }
+                            catch { }
                         }
-                        catch { }
                         Thread.Sleep(49);//Minimum CPU usage        
                     }
 
-                    //Thread.Sleep(-1);
-                    driver.Quit();
+                drowdownmenu:
+                    try
+                    {
+                        //profile button
+                        driver.FindElement(By.CssSelector("li[role='menuitem'][tabindex='0']")).Click();
+                    }
+                    catch
+                    {
+                        Thread.Sleep(49);//Minimum CPU usage
+                        goto drowdownmenu;
+                    }
 
+                exitmenu:
+                    try
+                    {
+                        //exit menu
+                        driver.FindElement(By.CssSelector("div[class='sc-jSUZER icZvms sc-fbYMXx MuiPopover-root sc-fXqpFg gUdnEO MuiMenu-root MuiModal-root'] > div")).Click();
+                    }
+                    catch (Exception)
+                    {
+                        Thread.Sleep(49);//Minimum CPU usage
+                        goto exitmenu;
+                    }
+
+                opencreditpage:
+                    try
+                    {
+                        //open credit page
+                        driver.FindElement(By.CssSelector("div.flex.gap-4.items-center > a")).Click();
+                    }
+                    catch
+                    {
+                        Thread.Sleep(49);//Minimum CPU usage
+                        goto opencreditpage;
+                    }
+
+                claimcredit:
+                    try
+                    {
+                        //claim credit
+                        driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button")).Click();
+                        goto endprogress;
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            //check credit is claimed?
+                            var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div")).Text;
+                            Debug.WriteLine(text);
+                            if (text != null) goto endprogress;
+                        }
+                        catch
+                        {
+                            goto claimcredit;
+                        }
+                    }
                 }
-                Thread.Sleep(49);//Minimum CPU usage      
+                catch { }
+
+            endprogress:
+                driver.Quit();
+                Thread.Sleep(49);//Minimum CPU usage  
             }
             Application.Exit();
         }
