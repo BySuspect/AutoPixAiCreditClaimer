@@ -29,6 +29,7 @@ namespace AutoPixAiCreditClaimer
             {
                 IWebDriver driver = new ChromeDriver();
 
+
                 /* Login */
                 driver.Navigate().GoToUrl("https://pixai.art/login");
                 while (true)
@@ -42,7 +43,7 @@ namespace AutoPixAiCreditClaimer
                         catch { }
                         driver.FindElement(By.Id("email-input")).SendKeys(user.email);
                         driver.FindElement(By.Id("password-input")).SendKeys(user.pass);
-                        driver.FindElement(By.Id(":r0:")).Submit();
+                        driver.FindElement(By.CssSelector("button[type='submit']")).Submit();
                         break;
                     }
                     catch { }
@@ -68,7 +69,18 @@ namespace AutoPixAiCreditClaimer
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
                                 break;
                             }
-                            catch { }
+                            catch
+                            {
+                                try
+                                {
+                                    //check is wrong password
+                                    driver.FindElement(By.CssSelector("svg[data-testid='ReportProblemOutlinedIcon']"));
+                                    MessageBox.Show("invalid account");
+                                    goto endprogress;
+                                }
+                                catch
+                                { }
+                            }
                         }
                         Thread.Sleep(49);//Minimum CPU usage        
                     }
