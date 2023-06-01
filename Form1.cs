@@ -97,17 +97,17 @@ namespace AutoPixAiCreditClaimer
                         goto drowdownmenu;
                     }
 
-                exitmenu:
-                    try
-                    {
-                        //exit menu
-                        driver.FindElement(By.CssSelector("div[class='sc-jSUZER icZvms sc-fbYMXx MuiPopover-root sc-fXqpFg gUdnEO MuiMenu-root MuiModal-root'] > div")).Click();
-                    }
-                    catch (Exception)
-                    {
-                        Thread.Sleep(49);//Minimum CPU usage
-                        goto exitmenu;
-                    }
+                //exitmenu:
+                //    try
+                //    {
+                //        //exit menu
+                //        driver.FindElement(By.CssSelector("div[class='sc-jSUZER icZvms sc-fbYMXx MuiPopover-root sc-fXqpFg gUdnEO MuiMenu-root MuiModal-root'] > div")).Click();
+                //    }
+                //    catch (Exception)
+                //    {
+                //        Thread.Sleep(49);//Minimum CPU usage
+                //        goto exitmenu;
+                //    }
 
                 opencreditpage:
                     try
