@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using AutoPixAiCreditClaimer.Pages;
 
 namespace AutoPixAiCreditClaimer
 {
@@ -13,7 +14,7 @@ namespace AutoPixAiCreditClaimer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainPage());
         }
     }
 }
