@@ -47,7 +47,7 @@ namespace AutoPixAiCreditClaimer.Pages
                         try
                         {
                             // Click the button to dismiss the initial pop-up
-                            driver.FindElement(By.CssSelector("div[id='root'] > div > button")).Click();
+                            driver.FindElement(By.CssSelector("div[id='root'] > div > div > button")).Click();
                         }
                         catch { }
 
