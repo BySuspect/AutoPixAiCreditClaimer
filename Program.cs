@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AutoPixAiCreditClaimer.Pages;
+using System;
 using System.Windows.Forms;
-using AutoPixAiCreditClaimer.Pages;
 
 namespace AutoPixAiCreditClaimer
 {

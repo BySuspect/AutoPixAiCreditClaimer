@@ -36,6 +36,10 @@ namespace AutoPixAiCreditClaimer.Pages
 
         private void btnsave_Click(object sender, EventArgs e)
         {
+
+            if (string.IsNullOrEmpty(txtName.Text) || string.IsNullOrEmpty(txtMail.Text) || string.IsNullOrEmpty(txtPass.Text))
+                return;
+
             var list = ListHelper.UserList;
             list = list.OrderBy(x => x.id).ToList<UserItems>();
 

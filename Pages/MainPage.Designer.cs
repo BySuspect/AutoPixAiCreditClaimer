@@ -47,6 +47,9 @@
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnaddnew = new System.Windows.Forms.Button();
             this.btnStartClaim = new System.Windows.Forms.Button();
+            this.ClaimWorker = new System.ComponentModel.BackgroundWorker();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.runSingleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifymenu.SuspendLayout();
             this.listmenu.SuspendLayout();
             this.SuspendLayout();
@@ -83,9 +86,10 @@
             this.btnhideform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnhideform.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnhideform.ForeColor = System.Drawing.Color.Blue;
-            this.btnhideform.Location = new System.Drawing.Point(525, 0);
+            this.btnhideform.Location = new System.Drawing.Point(612, 0);
+            this.btnhideform.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnhideform.Name = "btnhideform";
-            this.btnhideform.Size = new System.Drawing.Size(48, 23);
+            this.btnhideform.Size = new System.Drawing.Size(56, 26);
             this.btnhideform.TabIndex = 0;
             this.btnhideform.Text = "X";
             this.btnhideform.UseVisualStyleBackColor = false;
@@ -103,10 +107,11 @@
             this.btnminiform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnminiform.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnminiform.ForeColor = System.Drawing.Color.Blue;
-            this.btnminiform.Location = new System.Drawing.Point(490, 0);
+            this.btnminiform.Location = new System.Drawing.Point(571, 0);
+            this.btnminiform.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnminiform.Name = "btnminiform";
-            this.btnminiform.Size = new System.Drawing.Size(35, 23);
-            this.btnminiform.TabIndex = 1;
+            this.btnminiform.Size = new System.Drawing.Size(41, 26);
+            this.btnminiform.TabIndex = 0;
             this.btnminiform.Text = "⚊";
             this.btnminiform.UseVisualStyleBackColor = false;
             this.btnminiform.Click += new System.EventHandler(this.btnminiform_Click);
@@ -125,11 +130,12 @@
             this.lvaccounts.GridLines = true;
             this.lvaccounts.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvaccounts.HideSelection = false;
-            this.lvaccounts.Location = new System.Drawing.Point(12, 42);
+            this.lvaccounts.Location = new System.Drawing.Point(14, 49);
+            this.lvaccounts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lvaccounts.MultiSelect = false;
             this.lvaccounts.Name = "lvaccounts";
-            this.lvaccounts.Size = new System.Drawing.Size(430, 116);
-            this.lvaccounts.TabIndex = 2;
+            this.lvaccounts.Size = new System.Drawing.Size(501, 133);
+            this.lvaccounts.TabIndex = 0;
             this.lvaccounts.UseCompatibleStateImageBehavior = false;
             this.lvaccounts.View = System.Windows.Forms.View.Details;
             this.lvaccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMouseDown);
@@ -162,11 +168,12 @@
             // listmenu
             // 
             this.listmenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.runSingleToolStripMenuItem,
             this.editToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.refreshToolStripMenuItem});
             this.listmenu.Name = "listmenu";
-            this.listmenu.Size = new System.Drawing.Size(114, 70);
+            this.listmenu.Size = new System.Drawing.Size(131, 92);
             // 
             // editToolStripMenuItem
             // 
@@ -193,10 +200,11 @@
             // 
             this.btnaddnew.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnaddnew.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnaddnew.Location = new System.Drawing.Point(448, 42);
+            this.btnaddnew.Location = new System.Drawing.Point(522, 49);
+            this.btnaddnew.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnaddnew.Name = "btnaddnew";
-            this.btnaddnew.Size = new System.Drawing.Size(114, 23);
-            this.btnaddnew.TabIndex = 3;
+            this.btnaddnew.Size = new System.Drawing.Size(133, 26);
+            this.btnaddnew.TabIndex = 1;
             this.btnaddnew.Text = "Add New";
             this.btnaddnew.UseVisualStyleBackColor = true;
             this.btnaddnew.Click += new System.EventHandler(this.btnaddnew_Click);
@@ -205,26 +213,55 @@
             // 
             this.btnStartClaim.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnStartClaim.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnStartClaim.Location = new System.Drawing.Point(448, 71);
+            this.btnStartClaim.Location = new System.Drawing.Point(522, 113);
+            this.btnStartClaim.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnStartClaim.Name = "btnStartClaim";
-            this.btnStartClaim.Size = new System.Drawing.Size(114, 23);
+            this.btnStartClaim.Size = new System.Drawing.Size(133, 26);
             this.btnStartClaim.TabIndex = 3;
             this.btnStartClaim.Text = "Start Claim";
             this.btnStartClaim.UseVisualStyleBackColor = true;
             this.btnStartClaim.Click += new System.EventHandler(this.btnStartClaim_Click);
             // 
+            // ClaimWorker
+            // 
+            this.ClaimWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ClaimWorker_DoWork);
+            this.ClaimWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ClaimWorker_RunWorkerCompleted);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnSettings.Location = new System.Drawing.Point(522, 82);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(133, 26);
+            this.btnSettings.TabIndex = 2;
+            this.btnSettings.Text = "Settings";
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
+            // runSingleToolStripMenuItem
+            // 
+            this.runSingleToolStripMenuItem.Name = "runSingleToolStripMenuItem";
+            this.runSingleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.runSingleToolStripMenuItem.Text = "Run Single";
+            this.runSingleToolStripMenuItem.Click += new System.EventHandler(this.runSingleToolStripMenuItem_Click);
+            // 
             // MainPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(571, 183);
+            this.ClientSize = new System.Drawing.Size(666, 211);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnStartClaim);
             this.Controls.Add(this.btnaddnew);
             this.Controls.Add(this.lvaccounts);
             this.Controls.Add(this.btnminiform);
             this.Controls.Add(this.btnhideform);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainPage";
             this.Text = "MainPage";
             this.Load += new System.EventHandler(this.MainPage_Load);
@@ -254,5 +291,8 @@
         private System.Windows.Forms.Button btnStartClaim;
         private System.Windows.Forms.ColumnHeader id;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker ClaimWorker;
+        private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.ToolStripMenuItem runSingleToolStripMenuItem;
     }
 }

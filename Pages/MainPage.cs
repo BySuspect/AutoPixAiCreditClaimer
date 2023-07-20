@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,31 +16,65 @@ namespace AutoPixAiCreditClaimer.Pages
     public partial class MainPage : Form
     {
         List<UserItems> UserList = new List<UserItems>();
-
+        Logger logger;
         public MainPage()
         {
             InitializeComponent();
+
+            #region Changing old accounts.json file location
+            try
+            {
+                if (File.Exists("./accountlist.json"))
+                {
+                    var res = MessageBox.Show("The file \"accounts.json\" was found in the root folder of the application. Do you want to transfer the accounts registered here?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (res == DialogResult.Yes)
+                    {
+                        if (File.Exists(Path.Combine(References.AppFilesPath, "accountlist.json")))
+                            File.Delete(Path.Combine(References.AppFilesPath, "accountlist.json"));
+                        File.Move("./accountlist.json", Path.Combine(References.AppFilesPath, "accountlist.json"));
+                    }
+                }
+            }
+            catch { }
+            #endregion
+
             refreshList();
         }
 
-        // Event handler for the form load event
         private void MainPage_Load(object sender, EventArgs e)
         {
-
+            if (SettingsHelper.Settings.runOnAppStartup)
+                ClaimWorker.RunWorkerAsync();
         }
 
-        // Asynchronous method to start the automation process
-        private Task startAutomation()
+        private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             foreach (var user in UserList)
             {
-                IWebDriver driver = new ChromeDriver();
+                runClaimProgress(user).Wait();
+                Thread.Sleep(49);
+            }
+        }
+
+        private Task runClaimProgress(UserItems user)
+        {
+            string logPath = Path.Combine(References.AppFilesPath, "Logs", $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
+            logger = new Logger(logPath);
+            logger.Log("Progress Started!");
+
+            try
+            {
+                ChromeOptions options = new ChromeOptions();
+                options.AddArgument("--headless");
+                options.AddArgument("--disable-gpu");
+                options.AddArgument("log-level=4");
+                IWebDriver driver = new ChromeDriver(options);
 
                 /* Login */
 
-                // Navigate to the login page
                 driver.Navigate().GoToUrl("https://pixai.art/login");
 
+                #region Login
                 while (true)
                 {
                     try
@@ -63,11 +98,15 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     Thread.Sleep(49);
                 }
+                #endregion
+
+                logger.Log($"{user.name} - Successfully logged in.");
 
                 /* After Login */
 
                 try
                 {
+                    #region Select profile button
                     while (true)
                     {
                         try
@@ -99,7 +138,11 @@ namespace AutoPixAiCreditClaimer.Pages
                         }
                         Thread.Sleep(49);
                     }
+                    #endregion
 
+                    logger.Log("Profile button clicked.");
+
+                #region Open profile
                 drowdownmenu:
                     try
                     {
@@ -111,7 +154,11 @@ namespace AutoPixAiCreditClaimer.Pages
                         Thread.Sleep(49);
                         goto drowdownmenu;
                     }
+                    #endregion
 
+                    logger.Log("Profile opened.");
+
+                #region Open credit page
                 opencreditpage:
                     try
                     {
@@ -123,7 +170,11 @@ namespace AutoPixAiCreditClaimer.Pages
                         Thread.Sleep(49);
                         goto opencreditpage;
                     }
+                    #endregion
 
+                    logger.Log("Credit page opened.");
+
+                #region Claim credit
                 claimcredit:
                     try
                     {
@@ -137,7 +188,8 @@ namespace AutoPixAiCreditClaimer.Pages
                         {
                             // Check if the credit is already claimed
                             var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div")).Text;
-                            notifyIcon.ShowBalloonTip(1000, "Info!", text, ToolTipIcon.Info);
+                            notifyIcon.ShowBalloonTip(100, "Info!", text, ToolTipIcon.Info);
+                            logger.Log($"{user.name} - {text}");
                             if (text != null) goto endprogress;
                         }
                         catch
@@ -145,22 +197,28 @@ namespace AutoPixAiCreditClaimer.Pages
                             goto claimcredit;
                         }
                     }
+                    #endregion
+
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    logger.Log("Error: " + ex.Message);
+                }
 
             endprogress:
                 driver.Quit();
-                Thread.Sleep(49);
+                logger.Log($"{user.name} - Progress done.");
             }
-
+            catch (Exception ex)
+            {
+                logger.Log($"Error: {ex.Message}");
+            }
             return Task.CompletedTask;
         }
-
         #region Controls
 
         #region List Control
 
-        // Refresh the user list displayed in the Accounts List
         void refreshList()
         {
             lvaccounts.Items.Clear();
@@ -176,15 +234,13 @@ namespace AutoPixAiCreditClaimer.Pages
             }
         }
 
-        // Event handler for the "Add New" button click event
         private void btnaddnew_Click(object sender, EventArgs e)
         {
-            AddOrEditPage addOrEditPage = new AddOrEditPage();
-            addOrEditPage.ShowDialog();
+            AddOrEditPage page = new AddOrEditPage();
+            page.ShowDialog();
             refreshList();
         }
 
-        // Event handler for the Accounts List's "Edit" context menu item click event
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (lvaccounts.SelectedItems.Count == 1)
@@ -196,7 +252,6 @@ namespace AutoPixAiCreditClaimer.Pages
             }
         }
 
-        // Event handler for the Accounts List's "Delete" context menu item click event
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (lvaccounts.SelectedItems.Count == 1)
@@ -212,7 +267,24 @@ namespace AutoPixAiCreditClaimer.Pages
             }
         }
 
-        // Event handler for the Accounts List's "Refresh" context menu item click event
+        private void runSingleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lvaccounts.SelectedItems.Count == 1 && !ClaimWorker.IsBusy)
+            {
+                var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
+                runClaimProgress(selected);
+            }
+            else
+            {
+                if (lvaccounts.SelectedItems.Count == 0)
+                    notifyIcon.ShowBalloonTip(100, "Info!", "Please select item on list.", ToolTipIcon.Warning);
+                else if (lvaccounts.SelectedItems.Count > 1)
+                    notifyIcon.ShowBalloonTip(100, "Info!", "Please select 1 item on list.", ToolTipIcon.Warning);
+                else if (ClaimWorker.IsBusy)
+                    notifyIcon.ShowBalloonTip(100, "Info!", "Wait claim progress is running!", ToolTipIcon.Warning);
+            }
+        }
+
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             refreshList();
@@ -222,13 +294,11 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #region Form Control
 
-        // Event handler for the "Minimize" button click event
         private void btnminiform_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
 
-        // Event handler for the "Exit" button click event
         private void btnhideform_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -261,13 +331,11 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #region Notify Icon
 
-        // Event handler for the notify icon's "Exit" context menu item click event
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        // Event handler for the notify icon's double-click event
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show();
@@ -275,12 +343,24 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #endregion
 
+        #region Settings
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            SettingsPage page = new SettingsPage();
+            page.ShowDialog();
+        }
         #endregion
 
-        // Event handler for the "Start Claim" button click event
+        #endregion
+
         private void btnStartClaim_Click(object sender, EventArgs e)
         {
-            startAutomation();
+            ClaimWorker.RunWorkerAsync();
+        }
+
+        private void ClaimWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            notifyIcon.ShowBalloonTip(100, "Info!", "Credit claim progress completed!", ToolTipIcon.None);
         }
     }
 

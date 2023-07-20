@@ -7,8 +7,8 @@ namespace AutoPixAiCreditClaimer.Helpers
 {
     public class ListHelper
     {
-        // File path for JSON file, Default Value: "./accountlist.json"
-        private static string filePath = "./accountlist.json";
+        // File path for JSON file, Default Value: "C:/Users/{USER}/Documents/PixaiCreditClaimer/accountlist.json"
+        private static string filePath = Path.Combine(References.AppFilesPath, "accountlist.json");
 
         // Property to get or set the UserList
         public static List<UserItems> UserList
@@ -22,13 +22,19 @@ namespace AutoPixAiCreditClaimer.Helpers
             }
             set
             {
-                WriteJsonToFile(JsonConvert.SerializeObject(value));
+                WriteJsonToFile(JsonConvert.SerializeObject(value, Formatting.Indented));
             }
         }
 
         // Check if the file exists, if not, create a new JSON file
         private static void CheckFile()
         {
+            string logDirectory = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+
             if (!File.Exists(filePath))
             {
                 File.WriteAllText(filePath, "[]");
@@ -57,5 +63,4 @@ namespace AutoPixAiCreditClaimer.Helpers
         public string email { get; set; }
         public string pass { get; set; }
     }
-
 }
