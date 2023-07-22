@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
+    // A partial class representing a form for adding or editing user items
     public partial class AddOrEditPage : Form
     {
         bool isEdit = false; // Flag to indicate whether it's an edit operation or not
@@ -17,6 +18,7 @@ namespace AutoPixAiCreditClaimer.Pages
             InitializeComponent();
         }
 
+        // Constructor for editing an existing user item
         public AddOrEditPage(UserItems _selected)
         {
             InitializeComponent();
@@ -29,14 +31,17 @@ namespace AutoPixAiCreditClaimer.Pages
             txtPass.Text = selected.pass;
         }
 
+        // Event handler for the "Cancel" button click
         private void btnhideform_Click(object sender, EventArgs e)
         {
+            // Set the form's DialogResult to Cancel, indicating the cancel action
             DialogResult = DialogResult.Cancel;
         }
 
+        // Event handler for the "Save" button click
         private void btnsave_Click(object sender, EventArgs e)
         {
-
+            // Check if any of the required fields (name, email, password) are empty, and return if so
             if (string.IsNullOrEmpty(txtName.Text) || string.IsNullOrEmpty(txtMail.Text) || string.IsNullOrEmpty(txtPass.Text))
                 return;
 
@@ -45,7 +50,7 @@ namespace AutoPixAiCreditClaimer.Pages
 
             if (isEdit)
             {
-                // If it's an edit operation, update the selected UserItems object
+                // If it's an edit operation, update the selected UserItems object in the list
                 int index = list.FindIndex(x => x.id == selected.id);
                 var edited = new UserItems
                 {
@@ -73,8 +78,11 @@ namespace AutoPixAiCreditClaimer.Pages
 
             // Update the UserList in ListHelper with the modified list
             ListHelper.UserList = list;
+
+            // Set the form's DialogResult to OK, indicating the successful completion of the operation
             DialogResult = DialogResult.OK;
         }
+
 
         #region Mouse move codes
 

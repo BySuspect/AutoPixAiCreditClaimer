@@ -88,7 +88,7 @@
             // btnsave
             // 
             this.btnsave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnsave.Location = new System.Drawing.Point(52, 182);
+            this.btnsave.Location = new System.Drawing.Point(58, 187);
             this.btnsave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnsave.Name = "btnsave";
             this.btnsave.Size = new System.Drawing.Size(117, 27);

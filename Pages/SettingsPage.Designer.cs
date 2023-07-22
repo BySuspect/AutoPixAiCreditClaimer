@@ -33,6 +33,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.cbRunOnWindowsStartup = new System.Windows.Forms.CheckBox();
             this.cbRunOnAppStartup = new System.Windows.Forms.CheckBox();
+            this.chShowBrowserOnClaimProgress = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnhideform
@@ -45,7 +46,7 @@
             this.btnhideform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnhideform.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnhideform.ForeColor = System.Drawing.Color.Blue;
-            this.btnhideform.Location = new System.Drawing.Point(102, -2);
+            this.btnhideform.Location = new System.Drawing.Point(104, -2);
             this.btnhideform.Margin = new System.Windows.Forms.Padding(4);
             this.btnhideform.Name = "btnhideform";
             this.btnhideform.Size = new System.Drawing.Size(64, 28);
@@ -59,7 +60,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnSave.Location = new System.Drawing.Point(40, 122);
+            this.btnSave.Location = new System.Drawing.Point(45, 148);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 2;
@@ -87,11 +88,22 @@
             this.cbRunOnAppStartup.Text = "Run With App Start";
             this.cbRunOnAppStartup.UseVisualStyleBackColor = true;
             // 
+            // chShowBrowserOnClaimProgress
+            // 
+            this.chShowBrowserOnClaimProgress.AutoSize = true;
+            this.chShowBrowserOnClaimProgress.Location = new System.Drawing.Point(12, 100);
+            this.chShowBrowserOnClaimProgress.Name = "chShowBrowserOnClaimProgress";
+            this.chShowBrowserOnClaimProgress.Size = new System.Drawing.Size(116, 21);
+            this.chShowBrowserOnClaimProgress.TabIndex = 5;
+            this.chShowBrowserOnClaimProgress.Text = "Show Browser";
+            this.chShowBrowserOnClaimProgress.UseVisualStyleBackColor = true;
+            // 
             // SettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(166, 157);
+            this.ClientSize = new System.Drawing.Size(168, 183);
+            this.Controls.Add(this.chShowBrowserOnClaimProgress);
             this.Controls.Add(this.cbRunOnAppStartup);
             this.Controls.Add(this.cbRunOnWindowsStartup);
             this.Controls.Add(this.btnSave);
@@ -117,5 +129,6 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.CheckBox cbRunOnWindowsStartup;
         private System.Windows.Forms.CheckBox cbRunOnAppStartup;
+        private System.Windows.Forms.CheckBox chShowBrowserOnClaimProgress;
     }
 }
