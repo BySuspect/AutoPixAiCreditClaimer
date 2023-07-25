@@ -81,9 +81,9 @@ namespace AutoPixAiCreditClaimer.Pages
                 if (!SettingsHelper.Settings.showBrowserOnClaimProgress)
                 {
                     options.AddArgument("--headless");
-                    options.AddArgument("--disable-gpu");
+                    //options.AddArgument("--disable-gpu");
                 }
-                options.AddArgument("log-level=4");
+                //options.AddArgument("log-level=4");
                 IWebDriver driver = new ChromeDriver(options);
 
                 /* Login */

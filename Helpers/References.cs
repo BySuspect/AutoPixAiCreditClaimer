@@ -7,8 +7,8 @@ namespace AutoPixAiCreditClaimer.Helpers
     public static class References
     {
 #if DEBUG
-    // Define the file path for the application files in DEBUG mode
-    public static string AppFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PixaiCreditClaimerDebug");
+        // Define the file path for the application files in DEBUG mode
+        public static string AppFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PixaiCreditClaimerDebug");
 #endif
 #if !DEBUG
         // Define the file path for the application files in RELEASE mode

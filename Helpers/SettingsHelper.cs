@@ -65,8 +65,8 @@ namespace AutoPixAiCreditClaimer.Helpers
         // Whether to run the application on Windows startup (Default: false)
         public bool runOnWindowsStartup { get; set; } = false;
 
-        // Whether to show the browser during the credit claim progress (Default: false)
-        public bool showBrowserOnClaimProgress { get; set; } = false;
+        // Whether to show the browser during the credit claim progress (Default: true)
+        public bool showBrowserOnClaimProgress { get; set; } = true;
     }
 
 }
