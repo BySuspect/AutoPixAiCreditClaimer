@@ -85,6 +85,7 @@ namespace AutoPixAiCreditClaimer.Pages
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=2");
+                options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
                 IWebDriver driver = new ChromeDriver(options);
 
                 /* Login */
@@ -120,6 +121,8 @@ namespace AutoPixAiCreditClaimer.Pages
 
                 logger.Log($"{user.name} - Successfully logged in.");
 
+                Thread.Sleep(300);
+
                 /* After Login */
 
                 try
@@ -140,6 +143,7 @@ namespace AutoPixAiCreditClaimer.Pages
                             {
                                 // If the profile doesn't have an image, click on a different element
                                 driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
+                                Thread.Sleep(300);
                                 break;
                             }
                             catch
@@ -167,6 +171,7 @@ namespace AutoPixAiCreditClaimer.Pages
                     try
                     {
                         driver.FindElement(By.CssSelector("li[role='menuitem'][tabindex='0']")).Click();
+                        Thread.Sleep(300);
                     }
                     catch
                     {
@@ -183,6 +188,7 @@ namespace AutoPixAiCreditClaimer.Pages
                     try
                     {
                         driver.FindElement(By.CssSelector("div[id='root'] > div.flex > div > div > div > div.flex.flex-col.gap-8 > div > div.flex.flex-col.gap-4 > div > a")).Click();
+                        Thread.Sleep(300);
                     }
                     catch
                     {
@@ -199,6 +205,17 @@ namespace AutoPixAiCreditClaimer.Pages
                     try
                     {
                         driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button")).Click();
+                        Thread.Sleep(500);
+
+                        try
+                        {
+                            // Check credit is claimed
+                            driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div"));
+                        }
+                        catch
+                        {
+                            goto claimcredit;
+                        }
                         goto endprogress;
                     }
                     catch
@@ -234,6 +251,7 @@ namespace AutoPixAiCreditClaimer.Pages
             }
             return Task.CompletedTask;
         }
+
         #region Controls
 
         #region List Control
@@ -314,6 +332,7 @@ namespace AutoPixAiCreditClaimer.Pages
                 var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
                 // Start the claim progress for the selected user
                 runClaimProgress(selected);
+                notifyIcon.ShowBalloonTip(100, "Info!", "Single Account's credit claimed!", ToolTipIcon.Info);
             }
             else
             {
