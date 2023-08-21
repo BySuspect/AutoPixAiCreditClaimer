@@ -187,7 +187,8 @@ namespace AutoPixAiCreditClaimer.Pages
                     // Find and click on the credit page link
                     try
                     {
-                        driver.FindElement(By.CssSelector("div[id='root'] > div.flex > div > div > div > div.flex.flex-col.gap-8 > div > div.flex.flex-col.gap-4 > div > a")).Click();
+                        driver.FindElement(By.CssSelector("div[role='tablist'] > a:nth-of-type(5)")).Click();
+                        //driver.FindElement(By.CssSelector("div[id='root'] > div.flex > div > div > div > div.flex.flex-col.gap-8 > div > div.flex.flex-col.gap-4 > div > a")).Click();
                         Thread.Sleep(300);
                     }
                     catch
@@ -331,7 +332,7 @@ namespace AutoPixAiCreditClaimer.Pages
                 // Get the selected user item from the UserList using the ListView selection
                 var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
                 // Start the claim progress for the selected user
-                runClaimProgress(selected);
+                runClaimProgress(selected).Wait();
                 notifyIcon.ShowBalloonTip(100, "Info!", "Single Account's credit claimed!", ToolTipIcon.Info);
             }
             else
