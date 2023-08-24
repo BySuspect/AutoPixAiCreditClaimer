@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -200,18 +201,37 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     logger.Log("Credit page opened.");
 
-                #region Claim credit
+                    #region Scroll to center
+                    try
+                    {
+                        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                        IWebElement element = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section"));
+                        js.ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Log($"Error: {ex.Message}");
+                        MessageBox.Show("Now have an error please wait new version of app.");
+                        goto endprogress;
+                    }
+                    #endregion
+
+                    logger.Log("Credit page scrolled.");
+
+                    #region Claim credit
+                    bool isClaimed = false;
                 claimcredit:
                     // Find and click the claim credit button
                     try
                     {
-                        driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button")).Click();
+                        driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section > button")).Click();
+                        isClaimed = true;
                         Thread.Sleep(500);
 
                         try
                         {
                             // Check credit is claimed
-                            driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div"));
+                            driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section > button > div > div > div"));
                         }
                         catch
                         {
@@ -223,11 +243,15 @@ namespace AutoPixAiCreditClaimer.Pages
                     {
                         try
                         {
-                            // Check if the credit is already claimed
-                            var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > section > button > div > div > div")).Text;
-                            notifyIcon.ShowBalloonTip(100, "Info!", text, ToolTipIcon.Info);
-                            logger.Log($"{user.name} - {text}");
-                            if (text != null) goto endprogress;
+                            if (!isClaimed)
+                            {
+                                // Check if the credit is already claimed
+                                var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section > button > div > div > div")).Text;
+                                notifyIcon.ShowBalloonTip(100, "Info!", text, ToolTipIcon.Info);
+                                logger.Log($"{user.name} - {text}");
+                                if (text != null) goto endprogress;
+                            }
+                            else goto endprogress;
                         }
                         catch
                         {
@@ -369,7 +393,7 @@ namespace AutoPixAiCreditClaimer.Pages
         private void btnhideform_Click(object sender, EventArgs e)
         {
             // Exit the application when the button is clicked
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         #region Mouse move codes
@@ -404,7 +428,7 @@ namespace AutoPixAiCreditClaimer.Pages
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Exit the application when the "Exit" context menu item is clicked
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         // Event handler for the "Notify Icon" double-click
