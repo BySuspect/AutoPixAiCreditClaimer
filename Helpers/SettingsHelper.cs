@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics.Contracts;
 using System.IO;
 
 namespace AutoPixAiCreditClaimer.Helpers
@@ -67,6 +68,10 @@ namespace AutoPixAiCreditClaimer.Helpers
 
         // Whether to show the browser during the credit claim progress (Default: true)
         public bool showBrowserOnClaimProgress { get; set; } = true;
+        // Whether to scroll towards the button on the credit page [Maybe has a bug] (Default: false)
+        public bool scrollPageAutomation { get; set; } = false;
+        // Whether to automatically exit the application after claim progress (Default: false)
+        public bool AutoExitApp { get; set; } = false;
     }
 
 }

@@ -19,6 +19,8 @@ namespace AutoPixAiCreditClaimer.Pages
             cbRunOnAppStartup.Checked = SettingsHelper.Settings.runOnAppStartup;
             cbRunOnWindowsStartup.Checked = SettingsHelper.Settings.runOnWindowsStartup;
             chShowBrowserOnClaimProgress.Checked = SettingsHelper.Settings.showBrowserOnClaimProgress;
+            cbScrollAutomation.Checked = SettingsHelper.Settings.scrollPageAutomation;
+            cbAutoExit.Checked = SettingsHelper.Settings.AutoExitApp;
         }
 
         // Event handler for the "Cancel" button click
@@ -62,6 +64,8 @@ namespace AutoPixAiCreditClaimer.Pages
                 runOnWindowsStartup = cbRunOnWindowsStartup.Checked,
                 runOnAppStartup = cbRunOnAppStartup.Checked,
                 showBrowserOnClaimProgress = chShowBrowserOnClaimProgress.Checked,
+                scrollPageAutomation = cbScrollAutomation.Checked,
+                AutoExitApp = cbAutoExit.Checked,
             };
 
             // Add or remove the application from Windows startup based on the selected checkbox value

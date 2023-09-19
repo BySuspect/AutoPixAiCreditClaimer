@@ -73,6 +73,7 @@ namespace AutoPixAiCreditClaimer.Pages
             // Define the log path with the current date and time
             string logPath = Path.Combine(References.AppFilesPath, "Logs", $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
             logger = new Logger(logPath);
+            logger.Log($"App version: {System.Windows.Forms.Application.ProductVersion}");
             logger.Log("Progress Started!");
 
             try
@@ -107,8 +108,14 @@ namespace AutoPixAiCreditClaimer.Pages
                         catch { }
 
                         // Enter the user's email and password
-                        driver.FindElement(By.Id("email-input")).SendKeys(user.email);
-                        driver.FindElement(By.Id("password-input")).SendKeys(user.pass);
+                        var emailInput = driver.FindElement(By.Id("email-input"));
+                        emailInput.Clear();
+                        emailInput.SendKeys(user.email);
+
+
+                        var passwordInput = driver.FindElement(By.Id("password-input"));
+                        passwordInput.Clear();
+                        passwordInput.SendKeys(user.pass);
 
                         // Submit the login form
                         driver.FindElement(By.CssSelector("button[type='submit']")).Submit();
@@ -201,22 +208,37 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     logger.Log("Credit page opened.");
 
-                    #region Scroll to center
-                    try
+                    if (SettingsHelper.Settings.scrollPageAutomation)
                     {
-                        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                        IWebElement element = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section"));
-                        js.ExecuteScript("arguments[0].scrollIntoView(true);", element);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Log($"Error: {ex.Message}");
-                        MessageBox.Show("Now have an error please wait new version of app.");
-                        goto endprogress;
-                    }
-                    #endregion
 
-                    logger.Log("Credit page scrolled.");
+                        #region Scroll to button
+                        try
+                        {
+                            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
+                            try
+                            {
+                                IWebElement element = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section"));
+                                js.ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                            }
+                            catch (NoSuchElementException ex)
+                            {
+                                logger.Log("Element not found: " + ex.Message);
+                                throw;
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Log($"Error: {ex.Message}");
+                            MessageBox.Show("Now have an error please disable \"PageScroll\" on settings and try again.");
+                            goto endprogress;
+                        }
+                        #endregion
+
+                        logger.Log("Credit page scrolled.");
+                    }
 
                     #region Claim credit
                     bool isClaimed = false;
@@ -466,6 +488,12 @@ namespace AutoPixAiCreditClaimer.Pages
         {
             // Show a balloon tip indicating the completion of the credit claim progress
             notifyIcon.ShowBalloonTip(100, "Info!", "Credit claim progress completed!", ToolTipIcon.None);
+
+            if (SettingsHelper.Settings.AutoExitApp)
+            {
+                //Exit application if AutoExit is enabled
+                System.Windows.Forms.Application.Exit();
+            }
         }
 
     }

@@ -30,7 +30,7 @@ namespace AutoPixAiCreditClaimer.Helpers
                 // Create or append to the log file and write the log message with a timestamp
                 using (StreamWriter sw = File.AppendText(logFilePath))
                 {
-                    string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+                    string logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] - {message}";
                     sw.WriteLine(logMessage);
                 }
             }
