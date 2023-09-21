@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Diagnostics.Contracts;
 using System.IO;
 
 namespace AutoPixAiCreditClaimer.Helpers

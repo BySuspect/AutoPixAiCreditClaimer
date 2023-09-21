@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -141,16 +140,19 @@ namespace AutoPixAiCreditClaimer.Pages
                     {
                         try
                         {
-                            // Check if the profile has an image and click on it
-                            driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > img")).Click();
-                            break;
+                            // Checking if the account is logged in
+                            if (driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Text.Contains("Sign Up")
+                                || driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Text.Contains("Log in"))
+                            {
+                                continue;
+                            }
                         }
                         catch
                         {
                             try
                             {
-                                // If the profile doesn't have an image, click on a different element
-                                driver.FindElement(By.CssSelector("div.cursor-pointer.flex.items-center.flex-shrink-0 > div")).Click();
+                                // Check if the profile has an image and click on it
+                                driver.FindElement(By.CssSelector("header > img")).Click();
                                 Thread.Sleep(300);
                                 break;
                             }
@@ -158,15 +160,27 @@ namespace AutoPixAiCreditClaimer.Pages
                             {
                                 try
                                 {
-                                    // Check if the password is incorrect
-                                    driver.FindElement(By.CssSelector("svg[data-testid='ReportProblemOutlinedIcon']"));
-                                    notifyIcon.ShowBalloonTip(1000, "Error!", $"{user.name} is an Invalid Account", ToolTipIcon.Error);
-                                    goto endprogress;
+                                    // If the profile doesn't have an image, click on a different element
+                                    driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Click();
+                                    Thread.Sleep(300);
+                                    break;
                                 }
                                 catch
-                                { }
+                                {
+                                    try
+                                    {
+                                        // Check if the password is incorrect
+                                        driver.FindElement(By.CssSelector("svg[data-testid='ReportProblemOutlinedIcon']"));
+                                        notifyIcon.ShowBalloonTip(1000, "Error!", $"{user.name} is an Invalid Account", ToolTipIcon.Error);
+                                        goto endprogress;
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
                             }
                         }
+
                         Thread.Sleep(49);
                     }
                     #endregion
@@ -183,8 +197,27 @@ namespace AutoPixAiCreditClaimer.Pages
                     }
                     catch
                     {
-                        Thread.Sleep(49);
-                        goto drowdownmenu;
+                        // Checking to if automation is not clicked to profile button
+                        try
+                        {
+                            driver.FindElement(By.CssSelector("header > img")).Click();
+                            Thread.Sleep(300);
+                            goto drowdownmenu;
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Click();
+                                Thread.Sleep(300);
+                                goto drowdownmenu;
+                            }
+                            catch
+                            {
+                                Thread.Sleep(49);
+                                goto drowdownmenu;
+                            }
+                        }
                     }
                     #endregion
 
