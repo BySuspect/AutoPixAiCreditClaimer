@@ -146,6 +146,7 @@ namespace AutoPixAiCreditClaimer.Pages
                             {
                                 continue;
                             }
+                            else throw new Exception();
                         }
                         catch
                         {
