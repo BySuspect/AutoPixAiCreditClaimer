@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -88,6 +89,9 @@ namespace AutoPixAiCreditClaimer.Pages
                 options.AddArgument("--log-level=2");
                 options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
                 IWebDriver driver = new ChromeDriver(options);
+
+                // Delay for loading the page
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
                 /* Login */
 
@@ -224,94 +228,73 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     logger.Log("Profile opened.");
 
-                #region Open credit page
-                opencreditpage:
-                    // Find and click on the credit page link
-                    try
-                    {
-                        driver.FindElement(By.CssSelector("div[role='tablist'] > a:nth-of-type(5)")).Click();
-                        //driver.FindElement(By.CssSelector("div[id='root'] > div.flex > div > div > div > div.flex.flex-col.gap-8 > div > div.flex.flex-col.gap-4 > div > a")).Click();
-                        Thread.Sleep(300);
-                    }
-                    catch
-                    {
-                        Thread.Sleep(49);
-                        goto opencreditpage;
-                    }
+                    #region Open credit page
+                    //opencreditpage:
+                    //    // Find and click on the credit page link
+                    //    try
+                    //    {
+                    //        driver.FindElement(By.CssSelector("div[role='tablist'] > a:nth-of-type(5)")).Click();
+                    //        //driver.FindElement(By.CssSelector("div[id='root'] > div.flex > div > div > div > div.flex.flex-col.gap-8 > div > div.flex.flex-col.gap-4 > div > a")).Click();
+                    //        Thread.Sleep(300);
+                    //    }
+                    //    catch
+                    //    {
+                    //        Thread.Sleep(49);
+                    //        goto opencreditpage;
+                    //    }
                     #endregion
 
                     logger.Log("Credit page opened.");
 
-                    if (SettingsHelper.Settings.scrollPageAutomation)
-                    {
-
-                        #region Scroll to button
-                        try
-                        {
-                            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-
-                            try
-                            {
-                                IWebElement element = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section"));
-                                js.ExecuteScript("arguments[0].scrollIntoView(true);", element);
-                            }
-                            catch (NoSuchElementException ex)
-                            {
-                                logger.Log("Element not found: " + ex.Message);
-                                throw;
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Log($"Error: {ex.Message}");
-                            MessageBox.Show("Now have an error please disable \"PageScroll\" on settings and try again.");
-                            goto endprogress;
-                        }
-                        #endregion
-
-                        logger.Log("Credit page scrolled.");
-                    }
-
                     #region Claim credit
                     bool isClaimed = false;
                 claimcredit:
-                    // Find and click the claim credit button
                     try
                     {
-                        driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section > button")).Click();
-                        isClaimed = true;
                         Thread.Sleep(500);
+                        string claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > div")).GetAttribute("innerHTML");
+                        if (claimBtnText.ToLower() == "claim")
+                        {
+                        miniClaimLoop:
+                            // Click on the claim button
+                            driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button")).Click();
+                            Thread.Sleep(300);
+                            claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > div")).GetAttribute("innerHTML");
 
-                        try
-                        {
-                            // Check credit is claimed
-                            driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section > button > div > div > div"));
+                            // Check if the claim button text has changed to "Claimed"
+                            if (claimBtnText.ToLower() == "claim")
+                                goto miniClaimLoop;
+
+                            isClaimed = true;
+                            goto endprogress;
                         }
-                        catch
+                        else if (claimBtnText.ToLower() == "claimed")
                         {
+                            notifyIcon.ShowBalloonTip(100, "Info!", $"The credit has already been claimed for {user.name}", ToolTipIcon.Info);
+                            logger.Log($"{user.name} - Already Claimed!");
+                            isClaimed = true;
+                            goto endprogress;
+                        }
+                        else
                             goto claimcredit;
-                        }
-                        goto endprogress;
+
                     }
                     catch
                     {
                         try
                         {
+                            Thread.Sleep(500);
                             if (!isClaimed)
                             {
-                                // Check if the credit is already claimed
-                                var text = driver.FindElement(By.CssSelector("div.flex.flex-col.gap-6.w-fit > div > section > button > div > div > div")).Text;
-                                notifyIcon.ShowBalloonTip(100, "Info!", text, ToolTipIcon.Info);
-                                logger.Log($"{user.name} - {text}");
-                                if (text != null) goto endprogress;
+                                // Check is page style changed
+                                driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button")).Click();
+                                goto claimcredit;
                             }
                             else goto endprogress;
                         }
                         catch
                         {
-                            goto claimcredit;
+                            notifyIcon.ShowBalloonTip(1000, "Error!", "Something is broken right now. Please open an issue on GitHub!", ToolTipIcon.Warning);
                         }
                     }
                     #endregion

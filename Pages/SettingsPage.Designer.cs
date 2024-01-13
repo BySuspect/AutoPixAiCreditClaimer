@@ -62,7 +62,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnSave.Location = new System.Drawing.Point(45, 221);
+            this.btnSave.Location = new System.Drawing.Point(45, 194);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 2;
@@ -104,17 +104,19 @@
             // 
             this.cbScrollAutomation.AccessibleDescription = "";
             this.cbScrollAutomation.AutoSize = true;
-            this.cbScrollAutomation.Location = new System.Drawing.Point(12, 127);
+            this.cbScrollAutomation.Enabled = false;
+            this.cbScrollAutomation.Location = new System.Drawing.Point(12, 154);
             this.cbScrollAutomation.Name = "cbScrollAutomation";
             this.cbScrollAutomation.Size = new System.Drawing.Size(95, 21);
             this.cbScrollAutomation.TabIndex = 5;
             this.cbScrollAutomation.Text = "PageScroll";
             this.cbScrollAutomation.UseVisualStyleBackColor = true;
+            this.cbScrollAutomation.Visible = false;
             // 
             // cbAutoExit
             // 
             this.cbAutoExit.AutoSize = true;
-            this.cbAutoExit.Location = new System.Drawing.Point(12, 154);
+            this.cbAutoExit.Location = new System.Drawing.Point(12, 127);
             this.cbAutoExit.Name = "cbAutoExit";
             this.cbAutoExit.Size = new System.Drawing.Size(78, 21);
             this.cbAutoExit.TabIndex = 5;
@@ -125,7 +127,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(168, 256);
+            this.ClientSize = new System.Drawing.Size(168, 229);
             this.Controls.Add(this.cbAutoExit);
             this.Controls.Add(this.cbScrollAutomation);
             this.Controls.Add(this.chShowBrowserOnClaimProgress);
