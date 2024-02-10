@@ -10,7 +10,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -154,6 +153,14 @@ namespace AutoPixAiCreditClaimer.Pages
                         }
                         catch
                         {
+                            Thread.Sleep(300);
+                            try
+                            {
+                                //check for popup
+                                driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")).Click();
+                            }
+                            catch { }
+
                             try
                             {
                                 // Check if the profile has an image and click on it
@@ -179,9 +186,7 @@ namespace AutoPixAiCreditClaimer.Pages
                                         notifyIcon.ShowBalloonTip(1000, "Error!", $"{user.name} is an Invalid Account", ToolTipIcon.Error);
                                         goto endprogress;
                                     }
-                                    catch
-                                    {
-                                    }
+                                    catch { }
                                 }
                             }
                         }
@@ -252,20 +257,20 @@ namespace AutoPixAiCreditClaimer.Pages
                     try
                     {
                         Thread.Sleep(500);
-                        string claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > div")).GetAttribute("innerHTML");
+                        string claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span")).GetAttribute("innerHTML");
                         if (claimBtnText.ToLower() == "claim")
                         {
                         miniClaimLoop:
                             // Click on the claim button
                             driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button")).Click();
+                            isClaimed = true;
                             Thread.Sleep(300);
-                            claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > div")).GetAttribute("innerHTML");
+                            claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span")).GetAttribute("innerHTML");
 
                             // Check if the claim button text has changed to "Claimed"
                             if (claimBtnText.ToLower() == "claim")
                                 goto miniClaimLoop;
 
-                            isClaimed = true;
                             goto endprogress;
                         }
                         else if (claimBtnText.ToLower() == "claimed")
