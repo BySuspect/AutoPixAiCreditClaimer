@@ -410,9 +410,19 @@ namespace AutoPixAiCreditClaimer.Pages
             {
                 // Get the selected user item from the UserList using the ListView selection
                 var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
+
+                if (selected == null)
+                    return;
+
+                btnStartClaim.Enabled = false;
+                btnStartClaim.Text = "Working in progress...";
+
                 // Start the claim progress for the selected user
                 runClaimProgress(selected).Wait();
-                notifyIcon.ShowBalloonTip(100, "Info!", "Single Account's credit claimed!", ToolTipIcon.Info);
+                notifyIcon.ShowBalloonTip(100, "Info!", "Single Account's claim progress completed!", ToolTipIcon.Info);
+
+                btnStartClaim.Enabled = true;
+                btnStartClaim.Text = "Start Claim";
             }
             else
             {
@@ -513,6 +523,8 @@ namespace AutoPixAiCreditClaimer.Pages
         private void btnStartClaim_Click(object sender, EventArgs e)
         {
             // Start the claim worker asynchronously
+            btnStartClaim.Enabled = false;
+            btnStartClaim.Text = "Working in progress...";
             ClaimWorker.RunWorkerAsync();
         }
 
@@ -521,6 +533,9 @@ namespace AutoPixAiCreditClaimer.Pages
         {
             // Show a balloon tip indicating the completion of the credit claim progress
             notifyIcon.ShowBalloonTip(100, "Info!", "Credit claim progress completed!", ToolTipIcon.None);
+
+            btnStartClaim.Enabled = true;
+            btnStartClaim.Text = "Start Claim";
 
             if (SettingsHelper.Settings.AutoExitApp)
             {
