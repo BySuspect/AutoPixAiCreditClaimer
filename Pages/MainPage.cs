@@ -263,14 +263,14 @@ namespace AutoPixAiCreditClaimer.Pages
                         miniClaimLoop:
                             // Click on the claim button
                             driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button")).Click();
-                            isClaimed = true;
+                            driver.Navigate().Refresh();
                             Thread.Sleep(300);
                             claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span")).GetAttribute("innerHTML");
 
                             // Check if the claim button text has changed to "Claimed"
-                            if (claimBtnText.ToLower() == "claim")
+                            if (claimBtnText.ToLower() != "claimed")
                                 goto miniClaimLoop;
-
+                            isClaimed = true;
                             goto endprogress;
                         }
                         else if (claimBtnText.ToLower() == "claimed")
