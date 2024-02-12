@@ -159,7 +159,15 @@ namespace AutoPixAiCreditClaimer.Pages
                                 //check for popup
                                 driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")).Click();
                             }
-                            catch { }
+                            catch
+                            {
+                                try
+                                {
+                                    //check for popup for browser is fullscreen
+                                    driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button")).Click();
+                                }
+                                catch { }
+                            }
 
                             try
                             {
