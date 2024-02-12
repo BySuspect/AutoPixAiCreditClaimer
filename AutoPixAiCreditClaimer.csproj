@@ -101,6 +101,12 @@
     <Compile Include="Pages\MainPage.Designer.cs">
       <DependentUpon>MainPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\NewVersionAlertPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pages\NewVersionAlertPage.Designer.cs">
+      <DependentUpon>NewVersionAlertPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\MainPage.resx">
       <DependentUpon>MainPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\NewVersionAlertPage.resx">
+      <DependentUpon>NewVersionAlertPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\SettingsPage.resx">
       <DependentUpon>SettingsPage.cs</DependentUpon>
@@ -149,6 +158,9 @@
     </PackageReference>
     <PackageReference Include="Selenium.WebDriver">
       <Version>4.17.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>8.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

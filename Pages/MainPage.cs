@@ -7,6 +7,8 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -48,11 +50,45 @@ namespace AutoPixAiCreditClaimer.Pages
             refreshList();
         }
 
-        private void MainPage_Load(object sender, EventArgs e)
+        private async void MainPage_Load(object sender, EventArgs e)
         {
+#if !DEBUG
+            // Checking for new version
+            string serverVersion = await GetLatestReleaseVersion();
+            if (serverVersion.Replace("V", "") != Application.ProductVersion)
+            {
+                NewVersionAlertPage page = new NewVersionAlertPage();
+                page.ShowDialog();
+                return;
+            }
+#endif
             // If the application setting is to run claim on app startup, start the claim worker
             if (SettingsHelper.Settings.runOnAppStartup)
                 ClaimWorker.RunWorkerAsync();
+        }
+        static async Task<string> GetLatestReleaseVersion()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
+
+                string apiUrl = $"https://api.github.com/repos/BySuspect/AutoPixAiCreditClaimer/releases/latest";
+
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    JsonDocument jsonDocument = JsonDocument.Parse(responseBody);
+                    JsonElement root = jsonDocument.RootElement;
+                    if (root.TryGetProperty("tag_name", out JsonElement tagElement))
+                    {
+                        return tagElement.GetString();
+                    }
+                }
+
+                return null;
+            }
         }
 
         private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
