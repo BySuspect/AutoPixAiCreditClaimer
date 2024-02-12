@@ -57,6 +57,7 @@ namespace AutoPixAiCreditClaimer.Pages
 
         private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
+
             // Claim credit for each user in the UserList
             foreach (var user in UserList)
             {
@@ -77,7 +78,9 @@ namespace AutoPixAiCreditClaimer.Pages
 
             try
             {
-                // Set Chrome options for headless browsing if needed
+                ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+                service.HideCommandPromptWindow = true;//disabling cmd window
+
                 ChromeOptions options = new ChromeOptions();
                 if (!SettingsHelper.Settings.showBrowserOnClaimProgress)
                 {
@@ -85,9 +88,9 @@ namespace AutoPixAiCreditClaimer.Pages
                 }
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
-                options.AddArgument("--log-level=2");
+                options.AddArgument("--log-level=OFF");
                 options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
-                IWebDriver driver = new ChromeDriver(options);
+                IWebDriver driver = new ChromeDriver(service, options);
 
                 // Delay for loading the page
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
