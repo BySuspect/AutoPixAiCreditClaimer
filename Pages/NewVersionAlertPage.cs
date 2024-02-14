@@ -39,13 +39,13 @@ namespace AutoPixAiCreditClaimer.Pages
 
         private void btnExitForm_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.DialogResult = DialogResult.OK;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/BySuspect/AutoPixAiCreditClaimer/releases/latest");
-            Application.Exit();
+            this.DialogResult = DialogResult.OK;
         }
     }
 }
