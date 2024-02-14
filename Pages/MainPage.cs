@@ -1,4 +1,5 @@
 ﻿using AutoPixAiCreditClaimer.Helpers;
+using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
@@ -8,7 +9,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -50,22 +50,42 @@ namespace AutoPixAiCreditClaimer.Pages
             refreshList();
         }
 
-        private async void MainPage_Load(object sender, EventArgs e)
+        private void MainPage_Load(object sender, EventArgs e)
         {
 #if !DEBUG
             // Checking for new version
-            string serverVersion = await GetLatestReleaseVersion();
-            if (serverVersion.Replace("V", "") != Application.ProductVersion)
-            {
-                NewVersionAlertPage page = new NewVersionAlertPage();
-                page.ShowDialog();
-                return;
-            }
+            Task.Run(CheckVersion);
 #endif
             // If the application setting is to run claim on app startup, start the claim worker
             if (SettingsHelper.Settings.runOnAppStartup)
                 ClaimWorker.RunWorkerAsync();
         }
+        static async Task CheckVersion()
+        {
+            string[] serverVersion = (await GetLatestReleaseVersion()).ToString().Replace("V", "").Split('.');
+            string[] currentVersion = Application.ProductVersion.Split('.');
+
+            NewVersionAlertPage page = new NewVersionAlertPage();
+            if (int.Parse(serverVersion[0]) > int.Parse(currentVersion[0]))
+            {
+                page.ShowDialog();
+            }
+            else if (int.Parse(serverVersion[0]) == int.Parse(currentVersion[0]))
+            {
+                if (int.Parse(serverVersion[1]) > int.Parse(currentVersion[1]))
+                {
+                    page.ShowDialog();
+                }
+                else if (int.Parse(serverVersion[1]) == int.Parse(currentVersion[1]))
+                {
+                    if (int.Parse(serverVersion[2]) > int.Parse(currentVersion[2]))
+                    {
+                        page.ShowDialog();
+                    }
+                }
+            }
+        }
+
         static async Task<string> GetLatestReleaseVersion()
         {
             using (HttpClient client = new HttpClient())
@@ -79,11 +99,11 @@ namespace AutoPixAiCreditClaimer.Pages
                 if (response.IsSuccessStatusCode)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    JsonDocument jsonDocument = JsonDocument.Parse(responseBody);
-                    JsonElement root = jsonDocument.RootElement;
-                    if (root.TryGetProperty("tag_name", out JsonElement tagElement))
+                    JObject jsonObj = JObject.Parse(responseBody);
+                    JToken tagToken = jsonObj["tag_name"];
+                    if (tagToken != null)
                     {
-                        return tagElement.GetString();
+                        return tagToken.ToString();
                     }
                 }
 
