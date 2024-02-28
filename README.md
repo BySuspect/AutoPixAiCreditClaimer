@@ -6,7 +6,7 @@
 
 ## Preview
 
-![Preview](https://media.discordapp.net/attachments/988690831869358121/1131556235972464750/v1.0.2.png)
+![Preview](https://imgur.com/atrGohU.png)
 
 If you get an error upon launching, install [.NET Framework 4.7.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472).
 
