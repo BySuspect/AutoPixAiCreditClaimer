@@ -124,13 +124,15 @@ namespace AutoPixAiCreditClaimer.Pages
         }
 
         // Method to claim credit progress for a specific user
-        private Task runClaimProgress(UserItems user)
+        private async Task runClaimProgress(UserItems user)
         {
             // Define the log path with the current date and time
             string logPath = Path.Combine(References.AppFilesPath, "Logs", $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
             logger = new Logger(logPath);
             logger.Log($"App version: {System.Windows.Forms.Application.ProductVersion}");
             logger.Log("Progress Started!");
+
+            bool isPopupClosed = false;
 
             try
             {
@@ -149,7 +151,7 @@ namespace AutoPixAiCreditClaimer.Pages
                 IWebDriver driver = new ChromeDriver(service, options);
 
                 // Delay for loading the page
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
 
                 /* Login */
 
@@ -213,20 +215,8 @@ namespace AutoPixAiCreditClaimer.Pages
                         catch
                         {
                             Thread.Sleep(300);
-                            try
-                            {
-                                //check for popup
-                                driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")).Click();
-                            }
-                            catch
-                            {
-                                try
-                                {
-                                    //check for popup for browser is fullscreen
-                                    driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button")).Click();
-                                }
-                                catch { }
-                            }
+
+                            isPopupClosed = checkPopup(driver);
 
                             try
                             {
@@ -253,7 +243,13 @@ namespace AutoPixAiCreditClaimer.Pages
                                         notifyIcon.ShowBalloonTip(1000, "Error!", $"{user.name} is an Invalid Account", ToolTipIcon.Error);
                                         goto endprogress;
                                     }
-                                    catch { }
+                                    catch
+                                    {
+                                        if (!isPopupClosed)
+                                        {
+                                            isPopupClosed = checkPopup(driver);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -283,6 +279,10 @@ namespace AutoPixAiCreditClaimer.Pages
                         }
                         catch
                         {
+                            if (!isPopupClosed)
+                            {
+                                isPopupClosed = checkPopup(driver);
+                            }
                             try
                             {
                                 driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Click();
@@ -291,7 +291,11 @@ namespace AutoPixAiCreditClaimer.Pages
                             }
                             catch
                             {
-                                Thread.Sleep(49);
+                                if (!isPopupClosed)
+                                {
+                                    isPopupClosed = checkPopup(driver);
+                                }
+                                Thread.Sleep(300);
                                 goto drowdownmenu;
                             }
                         }
@@ -300,30 +304,12 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     logger.Log("Profile opened.");
 
-                    #region Open credit page
-                    //opencreditpage:
-                    //    // Find and click on the credit page link
-                    //    try
-                    //    {
-                    //        driver.FindElement(By.CssSelector("div[role='tablist'] > a:nth-of-type(5)")).Click();
-                    //        //driver.FindElement(By.CssSelector("div[id='root'] > div.flex > div > div > div > div.flex.flex-col.gap-8 > div > div.flex.flex-col.gap-4 > div > a")).Click();
-                    //        Thread.Sleep(300);
-                    //    }
-                    //    catch
-                    //    {
-                    //        Thread.Sleep(49);
-                    //        goto opencreditpage;
-                    //    }
-                    #endregion
-
-                    logger.Log("Credit page opened.");
-
                     #region Claim credit
                     bool isClaimed = false;
+
                 claimcredit:
                     try
                     {
-                        Thread.Sleep(500);
                         string claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span")).GetAttribute("innerHTML");
                         if (claimBtnText.ToLower() != "claimed")
                         {
@@ -339,17 +325,14 @@ namespace AutoPixAiCreditClaimer.Pages
                             if (claimBtnText.ToLower() == "claimed")
                             {
                                 isClaimed = true;
-                                goto endprogress;
+                                goto checkIsClaimed;
                             }
                             else
                                 goto miniClaimLoop;
                         }
                         else if (claimBtnText.ToLower() == "claimed")
                         {
-                            notifyIcon.ShowBalloonTip(100, "Info!", $"The credit has already been claimed for {user.name}", ToolTipIcon.Info);
-                            logger.Log($"{user.name} - Already Claimed!");
-                            isClaimed = true;
-                            goto endprogress;
+                            goto checkIsClaimed;
                         }
                         else
                             goto claimcredit;
@@ -357,6 +340,10 @@ namespace AutoPixAiCreditClaimer.Pages
                     }
                     catch
                     {
+                        if (!isPopupClosed)
+                        {
+                            isPopupClosed = checkPopup(driver);
+                        }
                         try
                         {
                             Thread.Sleep(500);
@@ -373,8 +360,52 @@ namespace AutoPixAiCreditClaimer.Pages
                             notifyIcon.ShowBalloonTip(1000, "Error!", "Something is broken right now. Please open an issue on GitHub!", ToolTipIcon.Warning);
                         }
                     }
-                    #endregion
+                #endregion
 
+                checkIsClaimed:
+
+                    logger.Log("Claim checking from history");
+
+                    #region Open credit history tab
+                    try
+                    {
+                    clickCredits:
+                        Thread.Sleep(500);
+                        // Click on the credits tab
+                        driver.FindElement(By.XPath("//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]")).Click();
+
+                        // Check if the credits tab is selected
+                        bool isSelected = bool.Parse(driver.FindElement(By.XPath("//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]")).GetAttribute("aria-selected"));
+                        if (!isSelected)
+                            goto clickCredits;
+                        Thread.Sleep(1000);
+
+                        // Getting the credits history list
+                        var creditsList = driver.FindElements(By.CssSelector("table > tbody > tr"));
+                        foreach (var item in creditsList)
+                        {
+                            IWebElement th = item.FindElement(By.CssSelector("th"));
+                            IList<IWebElement> tds = item.FindElements(By.CssSelector("td"));
+
+                            string change = th.FindElement(By.CssSelector("pre")).Text;
+                            string type = tds[0].Text; // Type: "Daily Claim"
+                            DateTime.TryParse(tds[1].Text.Split('(')[0], out DateTime changeDate);
+
+                            // Check if the credit has already been claimed for today
+                            if (changeDate.Date == DateTime.Now.Date && type == "Daily Claim" && !isClaimed)
+                            {
+                                notifyIcon.ShowBalloonTip(100, "Info!", $"The credit has already been claimed for {user.name}", ToolTipIcon.Info);
+                                logger.Log($"{user.name} - Already Claimed!");
+                                isClaimed = true;
+                                goto endprogress;
+                            }
+                        }
+                        Thread.Sleep(500);
+                        if (!isClaimed)
+                            goto claimcredit;
+                    }
+                    catch { }
+                    #endregion
                 }
                 catch (Exception ex)
                 {
@@ -389,7 +420,30 @@ namespace AutoPixAiCreditClaimer.Pages
             {
                 logger.Log($"Error: {ex.Message}");
             }
-            return Task.CompletedTask;
+        }
+
+        private bool checkPopup(IWebDriver driver)
+        {
+            Console.WriteLine("Checking for popup");
+            try
+            {
+                //check for popup
+                driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")).Click();
+                return true;
+            }
+            catch
+            {
+                try
+                {
+                    //check for popup for browser is fullscreen
+                    driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button")).Click();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
         }
 
         #region Controls
