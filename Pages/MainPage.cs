@@ -124,7 +124,7 @@ namespace AutoPixAiCreditClaimer.Pages
         }
 
         // Method to claim credit progress for a specific user
-        private async Task runClaimProgress(UserItems user)
+        private Task runClaimProgress(UserItems user)
         {
             // Define the log path with the current date and time
             string logPath = Path.Combine(References.AppFilesPath, "Logs", $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
@@ -420,6 +420,7 @@ namespace AutoPixAiCreditClaimer.Pages
             {
                 logger.Log($"Error: {ex.Message}");
             }
+            return Task.CompletedTask;
         }
 
         private bool checkPopup(IWebDriver driver)
