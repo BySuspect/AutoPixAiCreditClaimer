@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace AutoPixAiCreditClaimer.Helpers
 {
@@ -73,5 +73,4 @@ namespace AutoPixAiCreditClaimer.Helpers
         public string email { get; set; }
         public string pass { get; set; }
     }
-
 }

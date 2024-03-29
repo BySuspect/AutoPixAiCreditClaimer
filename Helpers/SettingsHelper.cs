@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
+using Newtonsoft.Json;
 
 namespace AutoPixAiCreditClaimer.Helpers
 {
@@ -35,7 +35,10 @@ namespace AutoPixAiCreditClaimer.Helpers
                 // Create a new SettingsItems object with default values
                 SettingsItems items = new SettingsItems();
                 // Serialize the object to JSON format and write it to the file
-                File.WriteAllText(filePath, JsonConvert.SerializeObject(items, Formatting.Indented));
+                File.WriteAllText(
+                    filePath,
+                    JsonConvert.SerializeObject(items, Formatting.Indented)
+                );
             }
         }
 
@@ -67,10 +70,11 @@ namespace AutoPixAiCreditClaimer.Helpers
 
         // Whether to show the browser during the credit claim progress (Default: true)
         public bool showBrowserOnClaimProgress { get; set; } = true;
+
         // Whether to scroll towards the button on the credit page [Maybe has a bug] (Default: false)
         public bool scrollPageAutomation { get; set; } = false;
+
         // Whether to automatically exit the application after claim progress (Default: false)
         public bool AutoExitApp { get; set; } = false;
     }
-
 }

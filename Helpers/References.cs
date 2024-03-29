@@ -8,12 +8,17 @@ namespace AutoPixAiCreditClaimer.Helpers
     {
 #if DEBUG
         // Define the file path for the application files in DEBUG mode
-        public static string AppFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PixaiCreditClaimerDebug");
+        public static string AppFilesPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "PixaiCreditClaimerDebug"
+        );
 #endif
 #if !DEBUG
         // Define the file path for the application files in RELEASE mode
-        public static string AppFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "PixaiCreditClaimer");
+        public static string AppFilesPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "PixaiCreditClaimer"
+        );
 #endif
     }
-
 }

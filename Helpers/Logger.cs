@@ -42,5 +42,4 @@ namespace AutoPixAiCreditClaimer.Helpers
             }
         }
     }
-
 }

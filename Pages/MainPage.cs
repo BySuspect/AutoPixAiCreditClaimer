@@ -1,8 +1,4 @@
-﻿using AutoPixAiCreditClaimer.Helpers;
-using Newtonsoft.Json.Linq;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -12,6 +8,10 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoPixAiCreditClaimer.Helpers;
+using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -32,14 +32,22 @@ namespace AutoPixAiCreditClaimer.Pages
                 if (File.Exists("./accountlist.json"))
                 {
                     // Ask the user if they want to transfer the accounts to a new location
-                    var res = MessageBox.Show("The file \"accounts.json\" was found in the root folder of the application. Do you want to transfer the accounts registered here?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    var res = MessageBox.Show(
+                        "The file \"accounts.json\" was found in the root folder of the application. Do you want to transfer the accounts registered here?",
+                        "Warning!",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
                     if (res == DialogResult.Yes)
                     {
                         // Check if the new location file exists and delete it if so
                         if (File.Exists(Path.Combine(References.AppFilesPath, "accountlist.json")))
                             File.Delete(Path.Combine(References.AppFilesPath, "accountlist.json"));
                         // Move the old accounts.json file to the new location
-                        File.Move("./accountlist.json", Path.Combine(References.AppFilesPath, "accountlist.json"));
+                        File.Move(
+                            "./accountlist.json",
+                            Path.Combine(References.AppFilesPath, "accountlist.json")
+                        );
                     }
                 }
             }
@@ -60,9 +68,13 @@ namespace AutoPixAiCreditClaimer.Pages
             if (SettingsHelper.Settings.runOnAppStartup)
                 ClaimWorker.RunWorkerAsync();
         }
+
         static async Task CheckVersion()
         {
-            string[] serverVersion = (await GetLatestReleaseVersion()).ToString().Replace("V", "").Split('.');
+            string[] serverVersion = (await GetLatestReleaseVersion())
+                .ToString()
+                .Replace("V", "")
+                .Split('.');
             string[] currentVersion = Application.ProductVersion.Split('.');
 
             NewVersionAlertPage page = new NewVersionAlertPage();
@@ -90,9 +102,13 @@ namespace AutoPixAiCreditClaimer.Pages
         {
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
+                client.DefaultRequestHeaders.Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36"
+                );
 
-                string apiUrl = $"https://api.github.com/repos/BySuspect/AutoPixAiCreditClaimer/releases/latest";
+                string apiUrl =
+                    $"https://api.github.com/repos/BySuspect/AutoPixAiCreditClaimer/releases/latest";
 
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
 
@@ -113,7 +129,6 @@ namespace AutoPixAiCreditClaimer.Pages
 
         private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-
             // Claim credit for each user in the UserList
             foreach (var user in UserList)
             {
@@ -127,7 +142,11 @@ namespace AutoPixAiCreditClaimer.Pages
         private Task runClaimProgress(UserItems user)
         {
             // Define the log path with the current date and time
-            string logPath = Path.Combine(References.AppFilesPath, "Logs", $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt");
+            string logPath = Path.Combine(
+                References.AppFilesPath,
+                "Logs",
+                $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt"
+            );
             logger = new Logger(logPath);
             logger.Log($"App version: {System.Windows.Forms.Application.ProductVersion}");
             logger.Log("Progress Started!");
@@ -137,7 +156,7 @@ namespace AutoPixAiCreditClaimer.Pages
             try
             {
                 ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-                service.HideCommandPromptWindow = true;//disabling cmd window
+                service.HideCommandPromptWindow = true; //disabling cmd window
 
                 ChromeOptions options = new ChromeOptions();
                 if (!SettingsHelper.Settings.showBrowserOnClaimProgress)
@@ -147,7 +166,9 @@ namespace AutoPixAiCreditClaimer.Pages
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=OFF");
-                options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
+                options.AddArgument(
+                    "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36"
+                );
                 IWebDriver driver = new ChromeDriver(service, options);
 
                 // Delay for loading the page
@@ -166,7 +187,9 @@ namespace AutoPixAiCreditClaimer.Pages
                         try
                         {
                             // Click the button to dismiss the initial pop-up
-                            driver.FindElement(By.CssSelector("div[id='root'] > div > div > button")).Click();
+                            driver
+                                .FindElement(By.CssSelector("div[id='root'] > div > div > button"))
+                                .Click();
                         }
                         catch { }
 
@@ -174,7 +197,6 @@ namespace AutoPixAiCreditClaimer.Pages
                         var emailInput = driver.FindElement(By.Id("email-input"));
                         emailInput.Clear();
                         emailInput.SendKeys(user.email);
-
 
                         var passwordInput = driver.FindElement(By.Id("password-input"));
                         passwordInput.Clear();
@@ -205,12 +227,19 @@ namespace AutoPixAiCreditClaimer.Pages
                         try
                         {
                             // Checking if the account is logged in
-                            if (driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Text.Contains("Sign Up")
-                                || driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Text.Contains("Log in"))
+                            if (
+                                driver
+                                    .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
+                                    .Text.Contains("Sign Up")
+                                || driver
+                                    .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
+                                    .Text.Contains("Log in")
+                            )
                             {
                                 continue;
                             }
-                            else throw new Exception();
+                            else
+                                throw new Exception();
                         }
                         catch
                         {
@@ -230,7 +259,9 @@ namespace AutoPixAiCreditClaimer.Pages
                                 try
                                 {
                                     // If the profile doesn't have an image, click on a different element
-                                    driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Click();
+                                    driver
+                                        .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
+                                        .Click();
                                     Thread.Sleep(300);
                                     break;
                                 }
@@ -239,8 +270,17 @@ namespace AutoPixAiCreditClaimer.Pages
                                     try
                                     {
                                         // Check if the password is incorrect
-                                        driver.FindElement(By.CssSelector("svg[data-testid='ReportProblemOutlinedIcon']"));
-                                        notifyIcon.ShowBalloonTip(1000, "Error!", $"{user.name} is an Invalid Account", ToolTipIcon.Error);
+                                        driver.FindElement(
+                                            By.CssSelector(
+                                                "svg[data-testid='ReportProblemOutlinedIcon']"
+                                            )
+                                        );
+                                        notifyIcon.ShowBalloonTip(
+                                            1000,
+                                            "Error!",
+                                            $"{user.name} is an Invalid Account",
+                                            ToolTipIcon.Error
+                                        );
                                         goto endprogress;
                                     }
                                     catch
@@ -260,12 +300,14 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     logger.Log("Profile button clicked.");
 
-                #region Open profile
-                drowdownmenu:
+                    #region Open profile
+                    drowdownmenu:
                     // Find and click on the profile button in the dropdown menu
                     try
                     {
-                        driver.FindElement(By.CssSelector("li[role='menuitem'][tabindex='0']")).Click();
+                        driver
+                            .FindElement(By.CssSelector("li[role='menuitem'][tabindex='0']"))
+                            .Click();
                         Thread.Sleep(300);
                     }
                     catch
@@ -285,7 +327,9 @@ namespace AutoPixAiCreditClaimer.Pages
                             }
                             try
                             {
-                                driver.FindElement(By.CssSelector("header > div:nth-of-type(2)")).Click();
+                                driver
+                                    .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
+                                    .Click();
                                 Thread.Sleep(300);
                                 goto drowdownmenu;
                             }
@@ -307,19 +351,37 @@ namespace AutoPixAiCreditClaimer.Pages
                     #region Claim credit
                     bool isClaimed = false;
 
-                claimcredit:
+                    claimcredit:
                     try
                     {
-                        string claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span")).GetAttribute("innerHTML");
+                        string claimBtnText = driver
+                            .FindElement(
+                                By.CssSelector(
+                                    "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                )
+                            )
+                            .GetAttribute("innerHTML");
                         if (claimBtnText.ToLower() != "claimed")
                         {
-                        miniClaimLoop:
+                            miniClaimLoop:
                             // Click on the claim button
-                            driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button")).Click();
+                            driver
+                                .FindElement(
+                                    By.CssSelector(
+                                        "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+                                    )
+                                )
+                                .Click();
                             Thread.Sleep(300);
                             driver.Navigate().Refresh();
                             Thread.Sleep(300);
-                            claimBtnText = driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span")).GetAttribute("innerHTML");
+                            claimBtnText = driver
+                                .FindElement(
+                                    By.CssSelector(
+                                        "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                    )
+                                )
+                                .GetAttribute("innerHTML");
 
                             // Check if the claim button text has changed to "Claimed"
                             if (claimBtnText.ToLower() == "claimed")
@@ -336,7 +398,6 @@ namespace AutoPixAiCreditClaimer.Pages
                         }
                         else
                             goto claimcredit;
-
                     }
                     catch
                     {
@@ -350,32 +411,58 @@ namespace AutoPixAiCreditClaimer.Pages
                             if (!isClaimed)
                             {
                                 // Check is page style changed
-                                driver.FindElement(By.CssSelector("section > div > div:nth-of-type(2) > div:nth-of-type(2) > button")).Click();
+                                driver
+                                    .FindElement(
+                                        By.CssSelector(
+                                            "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+                                        )
+                                    )
+                                    .Click();
                                 goto claimcredit;
                             }
-                            else goto endprogress;
+                            else
+                                goto endprogress;
                         }
                         catch
                         {
-                            notifyIcon.ShowBalloonTip(1000, "Error!", "Something is broken right now. Please open an issue on GitHub!", ToolTipIcon.Warning);
+                            notifyIcon.ShowBalloonTip(
+                                1000,
+                                "Error!",
+                                "Something is broken right now. Please open an issue on GitHub!",
+                                ToolTipIcon.Warning
+                            );
                         }
                     }
-                #endregion
+                    #endregion
 
-                checkIsClaimed:
+                    checkIsClaimed:
 
                     logger.Log("Claim checking from history");
 
                     #region Open credit history tab
                     try
                     {
-                    clickCredits:
+                        clickCredits:
                         Thread.Sleep(500);
                         // Click on the credits tab
-                        driver.FindElement(By.XPath("//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]")).Click();
+                        driver
+                            .FindElement(
+                                By.XPath(
+                                    "//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                )
+                            )
+                            .Click();
 
                         // Check if the credits tab is selected
-                        bool isSelected = bool.Parse(driver.FindElement(By.XPath("//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]")).GetAttribute("aria-selected"));
+                        bool isSelected = bool.Parse(
+                            driver
+                                .FindElement(
+                                    By.XPath(
+                                        "//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                    )
+                                )
+                                .GetAttribute("aria-selected")
+                        );
                         if (!isSelected)
                             goto clickCredits;
                         Thread.Sleep(1000);
@@ -392,9 +479,18 @@ namespace AutoPixAiCreditClaimer.Pages
                             DateTime.TryParse(tds[1].Text.Split('(')[0], out DateTime changeDate);
 
                             // Check if the credit has already been claimed for today
-                            if (changeDate.Date == DateTime.Now.Date && type == "Daily Claim" && !isClaimed)
+                            if (
+                                changeDate.Date == DateTime.Now.Date
+                                && type == "Daily Claim"
+                                && !isClaimed
+                            )
                             {
-                                notifyIcon.ShowBalloonTip(100, "Info!", $"The credit has already been claimed for {user.name}", ToolTipIcon.Info);
+                                notifyIcon.ShowBalloonTip(
+                                    100,
+                                    "Info!",
+                                    $"The credit has already been claimed for {user.name}",
+                                    ToolTipIcon.Info
+                                );
                                 logger.Log($"{user.name} - Already Claimed!");
                                 isClaimed = true;
                                 goto endprogress;
@@ -412,7 +508,7 @@ namespace AutoPixAiCreditClaimer.Pages
                     logger.Log("Error: " + ex.Message);
                 }
 
-            endprogress:
+                endprogress:
                 driver.Quit();
                 logger.Log($"{user.name} - Progress done.");
             }
@@ -429,7 +525,11 @@ namespace AutoPixAiCreditClaimer.Pages
             try
             {
                 //check for popup
-                driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")).Click();
+                driver
+                    .FindElement(
+                        By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")
+                    )
+                    .Click();
                 return true;
             }
             catch
@@ -437,7 +537,9 @@ namespace AutoPixAiCreditClaimer.Pages
                 try
                 {
                     //check for popup for browser is fullscreen
-                    driver.FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button")).Click();
+                    driver
+                        .FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button"))
+                        .Click();
                     return true;
                 }
                 catch
@@ -486,7 +588,9 @@ namespace AutoPixAiCreditClaimer.Pages
             if (lvaccounts.SelectedItems.Count == 1)
             {
                 // Get the selected user item from the UserList using the ListView selection
-                var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
+                var selected = UserList
+                    .Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text))
+                    .FirstOrDefault();
                 // Open the "AddOrEditPage" dialog to edit the selected user item
                 AddOrEditPage editPage = new AddOrEditPage(selected);
                 editPage.ShowDialog();
@@ -502,11 +606,18 @@ namespace AutoPixAiCreditClaimer.Pages
             if (lvaccounts.SelectedItems.Count == 1)
             {
                 // Display a warning message box to confirm deletion
-                var res = MessageBox.Show("Are you sure you want to delete?", "Warning!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                var res = MessageBox.Show(
+                    "Are you sure you want to delete?",
+                    "Warning!",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning
+                );
                 if (res == DialogResult.OK)
                 {
                     // Get the selected user item from the UserList using the ListView selection
-                    var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
+                    var selected = UserList
+                        .Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text))
+                        .FirstOrDefault();
                     // Remove the selected item from the UserList
                     UserList.Remove(selected);
                     // Update the ListHelper with the modified UserList
@@ -524,7 +635,9 @@ namespace AutoPixAiCreditClaimer.Pages
             if (lvaccounts.SelectedItems.Count == 1 && !ClaimWorker.IsBusy)
             {
                 // Get the selected user item from the UserList using the ListView selection
-                var selected = UserList.Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text)).FirstOrDefault();
+                var selected = UserList
+                    .Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text))
+                    .FirstOrDefault();
 
                 if (selected == null)
                     return;
@@ -534,7 +647,12 @@ namespace AutoPixAiCreditClaimer.Pages
 
                 // Start the claim progress for the selected user
                 runClaimProgress(selected).Wait();
-                notifyIcon.ShowBalloonTip(100, "Info!", "Single Account's claim progress completed!", ToolTipIcon.Info);
+                notifyIcon.ShowBalloonTip(
+                    100,
+                    "Info!",
+                    "Single Account's claim progress completed!",
+                    ToolTipIcon.Info
+                );
 
                 btnStartClaim.Enabled = true;
                 btnStartClaim.Text = "Start Claim";
@@ -543,11 +661,26 @@ namespace AutoPixAiCreditClaimer.Pages
             {
                 // Display a warning balloon tip if no item is selected, or more than one item is selected, or the claim worker is busy
                 if (lvaccounts.SelectedItems.Count == 0)
-                    notifyIcon.ShowBalloonTip(100, "Info!", "Please select an item on the list.", ToolTipIcon.Warning);
+                    notifyIcon.ShowBalloonTip(
+                        100,
+                        "Info!",
+                        "Please select an item on the list.",
+                        ToolTipIcon.Warning
+                    );
                 else if (lvaccounts.SelectedItems.Count > 1)
-                    notifyIcon.ShowBalloonTip(100, "Info!", "Please select only 1 item on the list.", ToolTipIcon.Warning);
+                    notifyIcon.ShowBalloonTip(
+                        100,
+                        "Info!",
+                        "Please select only 1 item on the list.",
+                        ToolTipIcon.Warning
+                    );
                 else if (ClaimWorker.IsBusy)
-                    notifyIcon.ShowBalloonTip(100, "Info!", "Wait claim progress is running!", ToolTipIcon.Warning);
+                    notifyIcon.ShowBalloonTip(
+                        100,
+                        "Info!",
+                        "Wait claim progress is running!",
+                        ToolTipIcon.Warning
+                    );
             }
         }
 
@@ -644,10 +777,18 @@ namespace AutoPixAiCreditClaimer.Pages
         }
 
         // Event handler for the completion of the claim worker
-        private void ClaimWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void ClaimWorker_RunWorkerCompleted(
+            object sender,
+            System.ComponentModel.RunWorkerCompletedEventArgs e
+        )
         {
             // Show a balloon tip indicating the completion of the credit claim progress
-            notifyIcon.ShowBalloonTip(100, "Info!", "Credit claim progress completed!", ToolTipIcon.None);
+            notifyIcon.ShowBalloonTip(
+                100,
+                "Info!",
+                "Credit claim progress completed!",
+                ToolTipIcon.None
+            );
 
             btnStartClaim.Enabled = true;
             btnStartClaim.Text = "Start Claim";
@@ -658,7 +799,5 @@ namespace AutoPixAiCreditClaimer.Pages
                 System.Windows.Forms.Application.Exit();
             }
         }
-
     }
-
 }

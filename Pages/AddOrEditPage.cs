@@ -1,9 +1,9 @@
-﻿using AutoPixAiCreditClaimer.Helpers;
-using System;
+﻿using System;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using AutoPixAiCreditClaimer.Helpers;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -42,7 +42,11 @@ namespace AutoPixAiCreditClaimer.Pages
         private void btnsave_Click(object sender, EventArgs e)
         {
             // Check if any of the required fields (name, email, password) are empty, and return if so
-            if (string.IsNullOrEmpty(txtName.Text) || string.IsNullOrEmpty(txtMail.Text) || string.IsNullOrEmpty(txtPass.Text))
+            if (
+                string.IsNullOrEmpty(txtName.Text)
+                || string.IsNullOrEmpty(txtMail.Text)
+                || string.IsNullOrEmpty(txtPass.Text)
+            )
                 return;
 
             var list = ListHelper.UserList;
@@ -67,13 +71,15 @@ namespace AutoPixAiCreditClaimer.Pages
             else
             {
                 // If it's not an edit operation, add a new UserItems object to the list
-                list.Add(new UserItems
-                {
-                    id = (list.Count == 0) ? 0 : list[list.Count - 1].id + 1,
-                    name = txtName.Text,
-                    email = txtMail.Text,
-                    pass = txtPass.Text,
-                });
+                list.Add(
+                    new UserItems
+                    {
+                        id = (list.Count == 0) ? 0 : list[list.Count - 1].id + 1,
+                        name = txtName.Text,
+                        email = txtMail.Text,
+                        pass = txtPass.Text,
+                    }
+                );
             }
 
             // Update the UserList in ListHelper with the modified list
@@ -82,7 +88,6 @@ namespace AutoPixAiCreditClaimer.Pages
             // Set the form's DialogResult to OK, indicating the successful completion of the operation
             DialogResult = DialogResult.OK;
         }
-
 
         #region Mouse move codes
 

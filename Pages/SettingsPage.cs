@@ -1,9 +1,9 @@
-﻿using AutoPixAiCreditClaimer.Helpers;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using AutoPixAiCreditClaimer.Helpers;
+using Microsoft.Win32;
 
 namespace AutoPixAiCreditClaimer.Pages
 {
@@ -18,7 +18,9 @@ namespace AutoPixAiCreditClaimer.Pages
             // Load the current application settings into the form's checkboxes
             cbRunOnAppStartup.Checked = SettingsHelper.Settings.runOnAppStartup;
             cbRunOnWindowsStartup.Checked = SettingsHelper.Settings.runOnWindowsStartup;
-            chShowBrowserOnClaimProgress.Checked = SettingsHelper.Settings.showBrowserOnClaimProgress;
+            chShowBrowserOnClaimProgress.Checked = SettingsHelper
+                .Settings
+                .showBrowserOnClaimProgress;
             cbScrollAutomation.Checked = SettingsHelper.Settings.scrollPageAutomation;
             cbAutoExit.Checked = SettingsHelper.Settings.AutoExitApp;
         }
@@ -82,9 +84,20 @@ namespace AutoPixAiCreditClaimer.Pages
         public void AddStartup()
         {
             // Add the application to the Windows startup registry key with the application's executable path
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            using (
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                    "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true
+                )
+            )
             {
-                key.SetValue(AppDomain.CurrentDomain.FriendlyName.Replace(".exe", ""), Path.Combine(AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.FriendlyName));
+                key.SetValue(
+                    AppDomain.CurrentDomain.FriendlyName.Replace(".exe", ""),
+                    Path.Combine(
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        AppDomain.CurrentDomain.FriendlyName
+                    )
+                );
             }
         }
 
@@ -92,11 +105,15 @@ namespace AutoPixAiCreditClaimer.Pages
         public void RemoveStartup()
         {
             // Remove the application from the Windows startup registry key
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            using (
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                    "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true
+                )
+            )
             {
                 key.DeleteValue(AppDomain.CurrentDomain.FriendlyName.Replace(".exe", ""), false);
             }
         }
     }
-
 }

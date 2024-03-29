@@ -11,7 +11,6 @@ namespace AutoPixAiCreditClaimer.Pages
             InitializeComponent();
         }
 
-
         #region Mouse move codes
 
         // Track the mouse location when the form is clicked
@@ -44,7 +43,9 @@ namespace AutoPixAiCreditClaimer.Pages
 
         private void button1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/BySuspect/AutoPixAiCreditClaimer/releases/latest");
+            System.Diagnostics.Process.Start(
+                "https://github.com/BySuspect/AutoPixAiCreditClaimer/releases/latest"
+            );
             this.DialogResult = DialogResult.OK;
         }
     }
