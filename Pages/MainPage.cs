@@ -259,9 +259,7 @@ namespace AutoPixAiCreditClaimer.Pages
                                 try
                                 {
                                     // If the profile doesn't have an image, click on a different element
-                                    driver
-                                        .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
-                                        .Click();
+                                    driver.FindElement(By.CssSelector("header > div")).Click();
                                     Thread.Sleep(300);
                                     break;
                                 }
@@ -306,7 +304,11 @@ namespace AutoPixAiCreditClaimer.Pages
                     try
                     {
                         driver
-                            .FindElement(By.CssSelector("li[role='menuitem'][tabindex='0']"))
+                            .FindElement(
+                                By.CssSelector(
+                                    "ul[role='menu'] > li[role='menuitem']:nth-of-type(1)"
+                                )
+                            )
                             .Click();
                         Thread.Sleep(300);
                     }
@@ -327,9 +329,7 @@ namespace AutoPixAiCreditClaimer.Pages
                             }
                             try
                             {
-                                driver
-                                    .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
-                                    .Click();
+                                driver.FindElement(By.CssSelector("header > div")).Click();
                                 Thread.Sleep(300);
                                 goto drowdownmenu;
                             }
