@@ -351,6 +351,8 @@ namespace AutoPixAiCreditClaimer.Pages
                     #region Claim credit
                     bool isClaimed = false;
 
+                    goto checkIsClaimed;
+
                     claimcredit:
                     try
                     {
