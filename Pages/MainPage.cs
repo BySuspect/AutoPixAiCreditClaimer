@@ -163,6 +163,7 @@ namespace AutoPixAiCreditClaimer.Pages
                 {
                     options.AddArgument("--headless=new");
                 }
+                options.AddArgument("--window-size=1200,800");
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=OFF");
@@ -300,8 +301,8 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     logger.Log("Profile button clicked.");
 
-                    #region Open profile
-                    drowdownmenu:
+                #region Open profile
+                drowdownmenu:
                     // Find and click on the profile button in the dropdown menu
                     try
                     {
@@ -355,7 +356,7 @@ namespace AutoPixAiCreditClaimer.Pages
 
                     goto checkIsClaimed;
 
-                    claimcredit:
+                claimcredit:
                     try
                     {
                         string claimBtnText = driver
@@ -367,7 +368,7 @@ namespace AutoPixAiCreditClaimer.Pages
                             .GetAttribute("innerHTML");
                         if (claimBtnText.ToLower() != "claimed")
                         {
-                            miniClaimLoop:
+                        miniClaimLoop:
                             // Click on the claim button
                             driver
                                 .FindElement(
@@ -437,16 +438,16 @@ namespace AutoPixAiCreditClaimer.Pages
                             );
                         }
                     }
-                    #endregion
+                #endregion
 
-                    checkIsClaimed:
+                checkIsClaimed:
 
                     logger.Log("Claim checking from history");
 
                     #region Open credit history tab
                     try
                     {
-                        clickCredits:
+                    clickCredits:
                         Thread.Sleep(500);
                         // Click on the credits tab
                         driver
@@ -504,7 +505,13 @@ namespace AutoPixAiCreditClaimer.Pages
                         if (!isClaimed)
                             goto claimcredit;
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        logger.Log("Error: " + ex.Message);
+                        MessageBox.Show(
+                            "There is an error now please open issue on github for fix."
+                        );
+                    }
                     #endregion
                 }
                 catch (Exception ex)
@@ -512,7 +519,7 @@ namespace AutoPixAiCreditClaimer.Pages
                     logger.Log("Error: " + ex.Message);
                 }
 
-                endprogress:
+            endprogress:
                 driver.Quit();
                 logger.Log($"{user.name} - Progress done.");
             }
