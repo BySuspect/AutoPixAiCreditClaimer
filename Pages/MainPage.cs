@@ -188,7 +188,9 @@ namespace AutoPixAiCreditClaimer.Pages
                         {
                             // Click the button to dismiss the initial pop-up
                             driver
-                                .FindElement(By.CssSelector("form > div > div > button:nth-of-type(4)"))
+                                .FindElement(
+                                    By.CssSelector("form > div > div > button:nth-of-type(4)")
+                                )
                                 .Click();
                         }
                         catch { }
@@ -460,7 +462,7 @@ namespace AutoPixAiCreditClaimer.Pages
                             driver
                                 .FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                        "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                     )
                                 )
                                 .GetAttribute("aria-selected")
