@@ -450,7 +450,7 @@ namespace AutoPixAiCreditClaimer.Pages
                         driver
                             .FindElement(
                                 By.XPath(
-                                    "//*[@id=\"root\"]/div[3]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                    "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                 )
                             )
                             .Click();
