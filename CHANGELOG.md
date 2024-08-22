@@ -4,10 +4,8 @@ All notable changes to this project will be documented in this file. Dates are d
 
 #### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/V1.1.9...HEAD)
 
-- Update FUNDING.yml [`#14`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/14)
-- update workflows [`3255ced`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/3255cedd39e29bc192a47b584fd5be2d5b3863d0)
-- Update issue templates [`556148f`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/556148fc3d04ccd0cde0184bd3738b98bb8454e1)
-- Update issue templates [`dff7b85`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/dff7b85425062de615712e2b90825b44c0a55ee0)
+- cleanup and workflows update [`549279a`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/549279a599a9f9ce9d605b2c7d8be1b5ca1e85ba)
+- Create changelog.hbs [`b92f2a8`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/b92f2a805417e36bba44eb7b5c516e82e406ddff)
 
 #### [V1.1.9](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/V1.1.8...V1.1.9)
 
