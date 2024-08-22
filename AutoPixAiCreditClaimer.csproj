@@ -21,4 +21,9 @@
 		<None Remove="CHANGELOG.md" />
 		<None Remove="LICENSE.txt" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="Selenium.WebDriver" Version="4.23.0" />
+	</ItemGroup>
 </Project>
