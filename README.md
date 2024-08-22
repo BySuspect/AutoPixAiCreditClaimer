@@ -6,7 +6,7 @@
 
 ## Preview
 
-![Preview](https://imgur.com/atrGohU.png)
+![Preview](https://i.imgur.com/atrGohU.png)
 
 If you get an error upon launching, install [.NET Framework 4.7.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472).
 
