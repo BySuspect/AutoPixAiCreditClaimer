@@ -128,7 +128,7 @@ namespace AutoPixAiCreditClaimer.Views
                 {
                     options.AddArgument("--headless=new");
                 }
-                options.AddArgument("--window-size=1200,800");
+                options.AddArgument("--window-size=1600,1024");
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=OFF");
@@ -218,7 +218,11 @@ namespace AutoPixAiCreditClaimer.Views
                             try
                             {
                                 // Check if the profile has an image and click on it
-                                driver.FindElement(By.CssSelector("header > img")).Click();
+                                driver
+                                    .FindElement(
+                                        By.CssSelector("header > span:nth-of-type(4) > img")
+                                    )
+                                    .Click();
                                 Thread.Sleep(300);
                                 break;
                             }
@@ -227,7 +231,11 @@ namespace AutoPixAiCreditClaimer.Views
                                 try
                                 {
                                     // If the profile doesn't have an image, click on a different element
-                                    driver.FindElement(By.CssSelector("header > div")).Click();
+                                    driver
+                                        .FindElement(
+                                            By.CssSelector("header > span:nth-of-type(4) > div")
+                                        )
+                                        .Click();
                                     Thread.Sleep(300);
                                     break;
                                 }
@@ -453,6 +461,14 @@ namespace AutoPixAiCreditClaimer.Views
                                 changeDate.Date == DateTime.Now.Date
                                 && type == "Daily Claim"
                                 && !isClaimed
+                                && driver
+                                    .FindElement(
+                                        By.CssSelector(
+                                            "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                        )
+                                    )
+                                    .GetAttribute("innerHTML")
+                                    .ToLower() == "claimed"
                             )
                             {
                                 notifyIcon.ShowBalloonTip(
