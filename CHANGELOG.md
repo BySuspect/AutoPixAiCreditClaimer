@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/V1.2.0...HEAD)
+#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/V1.3.0...HEAD)
+
+- driver timeout fix [`f88d1ad`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/f88d1ad85b6ef667c519abaa9eabebef29e39c11)
+
+#### [V1.3.0](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/V1.2.0...V1.3.0)
+
+1 October 2024 
 
 - Converting to dotnet [`#19`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/19)
 - Bump Selenium.WebDriver from 4.23.0 to 4.24.0 in the nuget group [`#16`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/16)
