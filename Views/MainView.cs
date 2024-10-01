@@ -142,7 +142,7 @@ namespace AutoPixAiCreditClaimer.Views
                 IWebDriver driver = new ChromeDriver(service, options);
 
                 // Some driver improvements
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
                 driver.Manage().Window.Size = new System.Drawing.Size(2000, 1600);
 
                 /* Login */
