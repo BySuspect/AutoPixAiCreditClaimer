@@ -1,0 +1,46 @@
+name: Generate and Commit Changelog
+
+on:
+  push:
+    branches: ['main']
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.yml'
+      - '**/*.hbs'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [build-complete]
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-commit-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install auto-changelog
+        run: npm install -g auto-changelog
+
+      - name: Generate Changelog
+        run: auto-changelog --unreleased --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml)' --tag-pattern '(\v.|\V.)' --output CHANGELOG.md --backfill-limit false
+
+      - name: Commit and push changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG.md"
+          git push

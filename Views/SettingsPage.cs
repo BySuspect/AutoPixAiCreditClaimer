@@ -18,7 +18,6 @@ namespace AutoPixAiCreditClaimer.Views
             chShowBrowserOnClaimProgress.Checked = SettingsHelper
                 .Settings
                 .showBrowserOnClaimProgress;
-            cbScrollAutomation.Checked = SettingsHelper.Settings.scrollPageAutomation;
             cbAutoExit.Checked = SettingsHelper.Settings.AutoExitApp;
         }
 
@@ -50,12 +49,11 @@ namespace AutoPixAiCreditClaimer.Views
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SettingsHelper.Settings = new SettingsItems
+            SettingsHelper.Settings = new SettingsModel
             {
                 runOnWindowsStartup = cbRunOnWindowsStartup.Checked,
                 runOnAppStartup = cbRunOnAppStartup.Checked,
                 showBrowserOnClaimProgress = chShowBrowserOnClaimProgress.Checked,
-                scrollPageAutomation = cbScrollAutomation.Checked,
                 AutoExitApp = cbAutoExit.Checked,
             };
 

@@ -85,10 +85,13 @@ namespace AutoPixAiCreditClaimer.Views
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     JObject jsonObj = JObject.Parse(responseBody);
-                    JToken tagToken = jsonObj["tag_name"];
-                    if (tagToken != null)
+                    JToken tag = jsonObj["tag_name"];
+                    if (tag != null)
                     {
-                        return tagToken.ToString();
+                        if (tag.ToString().ToLower().Contains("pre"))
+                            return null;
+                        else
+                            return tag.ToString();
                     }
                 }
 
@@ -128,7 +131,8 @@ namespace AutoPixAiCreditClaimer.Views
                 {
                     options.AddArgument("--headless=new");
                 }
-                options.AddArgument("--window-size=1600,1024");
+                options.AddArguments("--window-size=1,1");
+                options.AddArgument("--force-device-scale-factor=0.50");
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=OFF");
@@ -137,15 +141,15 @@ namespace AutoPixAiCreditClaimer.Views
                 );
                 IWebDriver driver = new ChromeDriver(service, options);
 
-                // Delay for loading the page
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+                // Some driver improvements
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+                driver.Manage().Window.Size = new System.Drawing.Size(2000, 1600);
 
                 /* Login */
 
                 driver.Navigate().GoToUrl("https://pixai.art/login");
 
                 #region Login
-                // Attempt to log in
                 while (true)
                 {
                     try
@@ -421,12 +425,13 @@ namespace AutoPixAiCreditClaimer.Views
                     try
                     {
                         clickCredits:
+
                         Thread.Sleep(500);
                         // Click on the credits tab
                         driver
                             .FindElement(
                                 By.XPath(
-                                    "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                    "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                 )
                             )
                             .Click();
@@ -436,7 +441,7 @@ namespace AutoPixAiCreditClaimer.Views
                             driver
                                 .FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                        "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                     )
                                 )
                                 .GetAttribute("aria-selected")
@@ -507,6 +512,8 @@ namespace AutoPixAiCreditClaimer.Views
             catch (Exception ex)
             {
                 logger.Log($"Error: {ex.Message}");
+                MessageBox.Show("Error! \n" + ex.Message);
+                throw;
             }
             return Task.CompletedTask;
         }

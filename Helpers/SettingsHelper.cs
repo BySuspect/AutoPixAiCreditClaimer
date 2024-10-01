@@ -14,12 +14,12 @@ namespace AutoPixAiCreditClaimer.Helpers
             References.AppFilesPath,
             "settings.json"
         );
-        public static SettingsItems Settings
+        public static SettingsModel Settings
         {
             get
             {
                 string json = ReadJsonFromFile();
-                var settings = JsonConvert.DeserializeObject<SettingsItems>(json);
+                var settings = JsonConvert.DeserializeObject<SettingsModel>(json);
                 return settings;
             }
             set { WriteJsonToFile(JsonConvert.SerializeObject(value, Formatting.Indented)); }
@@ -29,7 +29,7 @@ namespace AutoPixAiCreditClaimer.Helpers
         {
             if (!File.Exists(filePath))
             {
-                SettingsItems items = new SettingsItems();
+                SettingsModel items = new SettingsModel();
                 File.WriteAllText(
                     filePath,
                     JsonConvert.SerializeObject(items, Formatting.Indented)
@@ -48,17 +48,5 @@ namespace AutoPixAiCreditClaimer.Helpers
             CheckFile();
             return File.ReadAllText(filePath);
         }
-    }
-
-    public class SettingsItems
-    {
-        public bool runOnAppStartup { get; set; } = false; //(Default: false)
-        public bool runOnWindowsStartup { get; set; } = false; //(Default: false)
-
-        public bool showBrowserOnClaimProgress { get; set; } = true; //(Default: true)
-
-        public bool scrollPageAutomation { get; set; } = false; //(Default: false)
-
-        public bool AutoExitApp { get; set; } = false; //(Default: false)
     }
 }

@@ -29,248 +29,235 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainView));
-            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.notifymenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ecitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnhideform = new System.Windows.Forms.Button();
-            this.btnminiform = new System.Windows.Forms.Button();
-            this.lvaccounts = new System.Windows.Forms.ListView();
-            this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colmail = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colpass = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.listmenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnaddnew = new System.Windows.Forms.Button();
-            this.btnStartClaim = new System.Windows.Forms.Button();
-            this.ClaimWorker = new System.ComponentModel.BackgroundWorker();
-            this.btnSettings = new System.Windows.Forms.Button();
-            this.runSingleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.notifymenu.SuspendLayout();
-            this.listmenu.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            notifyIcon = new NotifyIcon(components);
+            notifymenu = new ContextMenuStrip(components);
+            ecitToolStripMenuItem = new ToolStripMenuItem();
+            btnhideform = new Button();
+            btnminiform = new Button();
+            lvaccounts = new ListView();
+            id = new ColumnHeader();
+            colname = new ColumnHeader();
+            colmail = new ColumnHeader();
+            colpass = new ColumnHeader();
+            listmenu = new ContextMenuStrip(components);
+            runSingleToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
+            refreshToolStripMenuItem = new ToolStripMenuItem();
+            btnaddnew = new Button();
+            btnStartClaim = new Button();
+            ClaimWorker = new System.ComponentModel.BackgroundWorker();
+            btnSettings = new Button();
+            notifymenu.SuspendLayout();
+            listmenu.SuspendLayout();
+            SuspendLayout();
             // 
             // notifyIcon
             // 
-            this.notifyIcon.ContextMenuStrip = this.notifymenu;
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "PixaiAutoCreditClaimer";
-            this.notifyIcon.Visible = true;
-            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+            notifyIcon.ContextMenuStrip = notifymenu;
+            notifyIcon.Text = "PixaiAutoCreditClaimer";
+            notifyIcon.Visible = true;
+            notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
             // 
             // notifymenu
             // 
-            this.notifymenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ecitToolStripMenuItem});
-            this.notifymenu.Name = "notifymenu";
-            this.notifymenu.Size = new System.Drawing.Size(94, 26);
+            notifymenu.Items.AddRange(new ToolStripItem[] { ecitToolStripMenuItem });
+            notifymenu.Name = "notifymenu";
+            notifymenu.Size = new Size(94, 26);
             // 
             // ecitToolStripMenuItem
             // 
-            this.ecitToolStripMenuItem.Name = "ecitToolStripMenuItem";
-            this.ecitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
-            this.ecitToolStripMenuItem.Text = "Exit";
-            this.ecitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            ecitToolStripMenuItem.Name = "ecitToolStripMenuItem";
+            ecitToolStripMenuItem.Size = new Size(93, 22);
+            ecitToolStripMenuItem.Text = "Exit";
+            ecitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // btnhideform
             // 
-            this.btnhideform.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnhideform.BackColor = System.Drawing.Color.White;
-            this.btnhideform.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnhideform.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnhideform.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnhideform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnhideform.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.btnhideform.ForeColor = System.Drawing.Color.Blue;
-            this.btnhideform.Location = new System.Drawing.Point(612, 0);
-            this.btnhideform.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnhideform.Name = "btnhideform";
-            this.btnhideform.Size = new System.Drawing.Size(56, 26);
-            this.btnhideform.TabIndex = 0;
-            this.btnhideform.Text = "X";
-            this.btnhideform.UseVisualStyleBackColor = false;
-            this.btnhideform.Click += new System.EventHandler(this.btnhideform_Click);
-            this.btnhideform.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMouseDown);
-            this.btnhideform.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormMouseMove);
+            btnhideform.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnhideform.BackColor = Color.White;
+            btnhideform.BackgroundImageLayout = ImageLayout.None;
+            btnhideform.Cursor = Cursors.Hand;
+            btnhideform.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+            btnhideform.FlatStyle = FlatStyle.Flat;
+            btnhideform.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnhideform.ForeColor = Color.Blue;
+            btnhideform.Location = new Point(612, 0);
+            btnhideform.Margin = new Padding(4);
+            btnhideform.Name = "btnhideform";
+            btnhideform.Size = new Size(56, 26);
+            btnhideform.TabIndex = 0;
+            btnhideform.Text = "X";
+            btnhideform.UseVisualStyleBackColor = false;
+            btnhideform.Click += btnhideform_Click;
+            btnhideform.MouseDown += FormMouseDown;
+            btnhideform.MouseMove += FormMouseMove;
             // 
             // btnminiform
             // 
-            this.btnminiform.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnminiform.BackColor = System.Drawing.Color.White;
-            this.btnminiform.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnminiform.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnminiform.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnminiform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnminiform.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.btnminiform.ForeColor = System.Drawing.Color.Blue;
-            this.btnminiform.Location = new System.Drawing.Point(571, 0);
-            this.btnminiform.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnminiform.Name = "btnminiform";
-            this.btnminiform.Size = new System.Drawing.Size(41, 26);
-            this.btnminiform.TabIndex = 0;
-            this.btnminiform.Text = "⚊";
-            this.btnminiform.UseVisualStyleBackColor = false;
-            this.btnminiform.Click += new System.EventHandler(this.btnminiform_Click);
-            this.btnminiform.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMouseDown);
-            this.btnminiform.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormMouseMove);
+            btnminiform.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnminiform.BackColor = Color.White;
+            btnminiform.BackgroundImageLayout = ImageLayout.None;
+            btnminiform.Cursor = Cursors.Hand;
+            btnminiform.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+            btnminiform.FlatStyle = FlatStyle.Flat;
+            btnminiform.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            btnminiform.ForeColor = Color.Blue;
+            btnminiform.Location = new Point(571, 0);
+            btnminiform.Margin = new Padding(4);
+            btnminiform.Name = "btnminiform";
+            btnminiform.Size = new Size(41, 26);
+            btnminiform.TabIndex = 0;
+            btnminiform.Text = "⚊";
+            btnminiform.UseVisualStyleBackColor = false;
+            btnminiform.Click += btnminiform_Click;
+            btnminiform.MouseDown += FormMouseDown;
+            btnminiform.MouseMove += FormMouseMove;
             // 
             // lvaccounts
             // 
-            this.lvaccounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.id,
-            this.colname,
-            this.colmail,
-            this.colpass});
-            this.lvaccounts.ContextMenuStrip = this.listmenu;
-            this.lvaccounts.FullRowSelect = true;
-            this.lvaccounts.GridLines = true;
-            this.lvaccounts.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvaccounts.HideSelection = false;
-            this.lvaccounts.Location = new System.Drawing.Point(14, 49);
-            this.lvaccounts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.lvaccounts.MultiSelect = false;
-            this.lvaccounts.Name = "lvaccounts";
-            this.lvaccounts.Size = new System.Drawing.Size(501, 133);
-            this.lvaccounts.TabIndex = 0;
-            this.lvaccounts.UseCompatibleStateImageBehavior = false;
-            this.lvaccounts.View = System.Windows.Forms.View.Details;
-            this.lvaccounts.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMouseDown);
-            this.lvaccounts.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormMouseMove);
+            lvaccounts.Columns.AddRange(new ColumnHeader[] { id, colname, colmail, colpass });
+            lvaccounts.ContextMenuStrip = listmenu;
+            lvaccounts.FullRowSelect = true;
+            lvaccounts.GridLines = true;
+            lvaccounts.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            lvaccounts.Location = new Point(14, 49);
+            lvaccounts.Margin = new Padding(4);
+            lvaccounts.MultiSelect = false;
+            lvaccounts.Name = "lvaccounts";
+            lvaccounts.Size = new Size(501, 133);
+            lvaccounts.TabIndex = 0;
+            lvaccounts.UseCompatibleStateImageBehavior = false;
+            lvaccounts.View = View.Details;
+            lvaccounts.MouseDown += FormMouseDown;
+            lvaccounts.MouseMove += FormMouseMove;
             // 
             // id
             // 
-            this.id.DisplayIndex = 3;
-            this.id.Text = "";
-            this.id.Width = 0;
+            id.DisplayIndex = 3;
+            id.Text = "";
+            id.Width = 0;
             // 
             // colname
             // 
-            this.colname.DisplayIndex = 0;
-            this.colname.Text = "Name";
-            this.colname.Width = 90;
+            colname.DisplayIndex = 0;
+            colname.Text = "Name";
+            colname.Width = 90;
             // 
             // colmail
             // 
-            this.colmail.DisplayIndex = 1;
-            this.colmail.Text = "Email";
-            this.colmail.Width = 177;
+            colmail.DisplayIndex = 1;
+            colmail.Text = "Email";
+            colmail.Width = 177;
             // 
             // colpass
             // 
-            this.colpass.DisplayIndex = 2;
-            this.colpass.Text = "Password";
-            this.colpass.Width = 150;
+            colpass.DisplayIndex = 2;
+            colpass.Text = "Password";
+            colpass.Width = 150;
             // 
             // listmenu
             // 
-            this.listmenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runSingleToolStripMenuItem,
-            this.editToolStripMenuItem,
-            this.deleteToolStripMenuItem,
-            this.refreshToolStripMenuItem});
-            this.listmenu.Name = "listmenu";
-            this.listmenu.Size = new System.Drawing.Size(131, 92);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
-            // refreshToolStripMenuItem
-            // 
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.refreshToolStripMenuItem.Text = "Refresh";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
-            // 
-            // btnaddnew
-            // 
-            this.btnaddnew.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnaddnew.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnaddnew.Location = new System.Drawing.Point(522, 49);
-            this.btnaddnew.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnaddnew.Name = "btnaddnew";
-            this.btnaddnew.Size = new System.Drawing.Size(133, 26);
-            this.btnaddnew.TabIndex = 1;
-            this.btnaddnew.Text = "Add New";
-            this.btnaddnew.UseVisualStyleBackColor = true;
-            this.btnaddnew.Click += new System.EventHandler(this.btnaddnew_Click);
-            // 
-            // btnStartClaim
-            // 
-            this.btnStartClaim.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnStartClaim.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnStartClaim.Location = new System.Drawing.Point(522, 113);
-            this.btnStartClaim.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnStartClaim.Name = "btnStartClaim";
-            this.btnStartClaim.Size = new System.Drawing.Size(133, 26);
-            this.btnStartClaim.TabIndex = 3;
-            this.btnStartClaim.Text = "Start Claim";
-            this.btnStartClaim.UseVisualStyleBackColor = true;
-            this.btnStartClaim.Click += new System.EventHandler(this.btnStartClaim_Click);
-            // 
-            // ClaimWorker
-            // 
-            this.ClaimWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ClaimWorker_DoWork);
-            this.ClaimWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ClaimWorker_RunWorkerCompleted);
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSettings.Location = new System.Drawing.Point(522, 82);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(133, 26);
-            this.btnSettings.TabIndex = 2;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            listmenu.Items.AddRange(new ToolStripItem[] { runSingleToolStripMenuItem, editToolStripMenuItem, deleteToolStripMenuItem, refreshToolStripMenuItem });
+            listmenu.Name = "listmenu";
+            listmenu.Size = new Size(131, 92);
             // 
             // runSingleToolStripMenuItem
             // 
-            this.runSingleToolStripMenuItem.Name = "runSingleToolStripMenuItem";
-            this.runSingleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.runSingleToolStripMenuItem.Text = "Run Single";
-            this.runSingleToolStripMenuItem.Click += new System.EventHandler(this.runSingleToolStripMenuItem_Click);
+            runSingleToolStripMenuItem.Name = "runSingleToolStripMenuItem";
+            runSingleToolStripMenuItem.Size = new Size(130, 22);
+            runSingleToolStripMenuItem.Text = "Run Single";
+            runSingleToolStripMenuItem.Click += runSingleToolStripMenuItem_Click;
             // 
-            // MainPage
+            // editToolStripMenuItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 211);
-            this.Controls.Add(this.btnSettings);
-            this.Controls.Add(this.btnStartClaim);
-            this.Controls.Add(this.btnaddnew);
-            this.Controls.Add(this.lvaccounts);
-            this.Controls.Add(this.btnminiform);
-            this.Controls.Add(this.btnhideform);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "MainPage";
-            this.Text = "MainPage";
-            this.Load += new System.EventHandler(this.MainPage_Load);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FormMouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FormMouseMove);
-            this.notifymenu.ResumeLayout(false);
-            this.listmenu.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(130, 22);
+            editToolStripMenuItem.Text = "Edit";
+            editToolStripMenuItem.Click += editToolStripMenuItem_Click;
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(130, 22);
+            deleteToolStripMenuItem.Text = "Delete";
+            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
+            // 
+            // refreshToolStripMenuItem
+            // 
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.Size = new Size(130, 22);
+            refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
+            // 
+            // btnaddnew
+            // 
+            btnaddnew.Anchor = AnchorStyles.Right;
+            btnaddnew.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnaddnew.Location = new Point(522, 49);
+            btnaddnew.Margin = new Padding(4);
+            btnaddnew.Name = "btnaddnew";
+            btnaddnew.Size = new Size(133, 26);
+            btnaddnew.TabIndex = 1;
+            btnaddnew.Text = "Add New";
+            btnaddnew.UseVisualStyleBackColor = true;
+            btnaddnew.Click += btnaddnew_Click;
+            // 
+            // btnStartClaim
+            // 
+            btnStartClaim.Anchor = AnchorStyles.Right;
+            btnStartClaim.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnStartClaim.Location = new Point(522, 113);
+            btnStartClaim.Margin = new Padding(4);
+            btnStartClaim.Name = "btnStartClaim";
+            btnStartClaim.Size = new Size(133, 26);
+            btnStartClaim.TabIndex = 3;
+            btnStartClaim.Text = "Start Claim";
+            btnStartClaim.UseVisualStyleBackColor = true;
+            btnStartClaim.Click += btnStartClaim_Click;
+            // 
+            // ClaimWorker
+            // 
+            ClaimWorker.DoWork += ClaimWorker_DoWork;
+            ClaimWorker.RunWorkerCompleted += ClaimWorker_RunWorkerCompleted;
+            // 
+            // btnSettings
+            // 
+            btnSettings.Anchor = AnchorStyles.Right;
+            btnSettings.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnSettings.Location = new Point(522, 82);
+            btnSettings.Margin = new Padding(4);
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(133, 26);
+            btnSettings.TabIndex = 2;
+            btnSettings.Text = "Settings";
+            btnSettings.UseVisualStyleBackColor = true;
+            btnSettings.Click += btnSettings_Click;
+            // 
+            // MainView
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(666, 211);
+            Controls.Add(btnSettings);
+            Controls.Add(btnStartClaim);
+            Controls.Add(btnaddnew);
+            Controls.Add(lvaccounts);
+            Controls.Add(btnminiform);
+            Controls.Add(btnhideform);
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(4);
+            Name = "MainView";
+            Text = "MainPage";
+            Load += MainPage_Load;
+            MouseDown += FormMouseDown;
+            MouseMove += FormMouseMove;
+            notifymenu.ResumeLayout(false);
+            listmenu.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
