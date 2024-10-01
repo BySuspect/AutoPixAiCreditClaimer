@@ -1,4 +1,4 @@
-﻿namespace AutoPixAiCreditClaimer.Pages
+﻿namespace AutoPixAiCreditClaimer.Views
 {
     partial class AddOrEditPage
     {

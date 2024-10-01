@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoPixAiCreditClaimer.Helpers;
@@ -13,48 +13,17 @@ using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace AutoPixAiCreditClaimer.Pages
+namespace AutoPixAiCreditClaimer.Views
 {
-    public partial class MainPage : Form
+    public partial class MainView : Form
     {
         // List to store user items
-        List<UserItems> UserList = new List<UserItems>();
-        Logger logger;
+        List<UserModel> userList = new List<UserModel>();
+        LoggingHelper logger;
 
-        public MainPage()
+        public MainView()
         {
             InitializeComponent();
-
-            #region Changing old accounts.json file location
-            try
-            {
-                // Check if the old accounts.json file exists in the root folder
-                if (File.Exists("./accountlist.json"))
-                {
-                    // Ask the user if they want to transfer the accounts to a new location
-                    var res = MessageBox.Show(
-                        "The file \"accounts.json\" was found in the root folder of the application. Do you want to transfer the accounts registered here?",
-                        "Warning!",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning
-                    );
-                    if (res == DialogResult.Yes)
-                    {
-                        // Check if the new location file exists and delete it if so
-                        if (File.Exists(Path.Combine(References.AppFilesPath, "accountlist.json")))
-                            File.Delete(Path.Combine(References.AppFilesPath, "accountlist.json"));
-                        // Move the old accounts.json file to the new location
-                        File.Move(
-                            "./accountlist.json",
-                            Path.Combine(References.AppFilesPath, "accountlist.json")
-                        );
-                    }
-                }
-            }
-            catch { }
-            #endregion
-
-            // Refresh the user list in the UI
             refreshList();
         }
 
@@ -78,22 +47,21 @@ namespace AutoPixAiCreditClaimer.Pages
                 .Split('.');
             string[] currentVersion = Application.ProductVersion.Split('.');
 
-            NewVersionAlertPage page = new NewVersionAlertPage();
             if (int.Parse(serverVersion[0]) > int.Parse(currentVersion[0]))
             {
-                page.ShowDialog();
+                MessageBox.Show("New version available! Please Update.");
             }
             else if (int.Parse(serverVersion[0]) == int.Parse(currentVersion[0]))
             {
                 if (int.Parse(serverVersion[1]) > int.Parse(currentVersion[1]))
                 {
-                    page.ShowDialog();
+                    MessageBox.Show("New version available! Please Update.");
                 }
                 else if (int.Parse(serverVersion[1]) == int.Parse(currentVersion[1]))
                 {
                     if (int.Parse(serverVersion[2]) > int.Parse(currentVersion[2]))
                     {
-                        page.ShowDialog();
+                        MessageBox.Show("New version available! Please Update.");
                     }
                 }
             }
@@ -117,10 +85,13 @@ namespace AutoPixAiCreditClaimer.Pages
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     JObject jsonObj = JObject.Parse(responseBody);
-                    JToken tagToken = jsonObj["tag_name"];
-                    if (tagToken != null)
+                    JToken tag = jsonObj["tag_name"];
+                    if (tag != null)
                     {
-                        return tagToken.ToString();
+                        if (tag.ToString().ToLower().Contains("pre"))
+                            return null;
+                        else
+                            return tag.ToString();
                     }
                 }
 
@@ -130,25 +101,21 @@ namespace AutoPixAiCreditClaimer.Pages
 
         private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            // Claim credit for each user in the UserList
-            foreach (var user in UserList)
+            foreach (var user in userList)
             {
-                // Call the runClaimProgress method for each user and wait for completion
                 runClaimProgress(user).Wait();
                 Thread.Sleep(49);
             }
         }
 
-        // Method to claim credit progress for a specific user
-        private Task runClaimProgress(UserItems user)
+        private Task runClaimProgress(UserModel user)
         {
-            // Define the log path with the current date and time
             string logPath = Path.Combine(
                 References.AppFilesPath,
                 "Logs",
                 $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt"
             );
-            logger = new Logger(logPath);
+            logger = new LoggingHelper(logPath);
             logger.Log($"App version: {System.Windows.Forms.Application.ProductVersion}");
             logger.Log("Progress Started!");
 
@@ -164,7 +131,8 @@ namespace AutoPixAiCreditClaimer.Pages
                 {
                     options.AddArgument("--headless=new");
                 }
-                options.AddArgument("--window-size=1280,720");
+                options.AddArguments("--window-size=1,1");
+                options.AddArgument("--force-device-scale-factor=0.50");
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=OFF");
@@ -173,15 +141,15 @@ namespace AutoPixAiCreditClaimer.Pages
                 );
                 IWebDriver driver = new ChromeDriver(service, options);
 
-                // Delay for loading the page
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+                // Some driver improvements
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+                driver.Manage().Window.Size = new System.Drawing.Size(2000, 1600);
 
                 /* Login */
 
                 driver.Navigate().GoToUrl("https://pixai.art/login");
 
                 #region Login
-                // Attempt to log in
                 while (true)
                 {
                     try
@@ -267,7 +235,6 @@ namespace AutoPixAiCreditClaimer.Pages
                                 try
                                 {
                                     // If the profile doesn't have an image, click on a different element
-                                    //header/span[4]/div
                                     driver
                                         .FindElement(
                                             By.CssSelector("header > span:nth-of-type(4) > div")
@@ -458,12 +425,13 @@ namespace AutoPixAiCreditClaimer.Pages
                     try
                     {
                         clickCredits:
+
                         Thread.Sleep(500);
                         // Click on the credits tab
                         driver
                             .FindElement(
                                 By.XPath(
-                                    "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                    "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                 )
                             )
                             .Click();
@@ -473,7 +441,7 @@ namespace AutoPixAiCreditClaimer.Pages
                             driver
                                 .FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                        "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                     )
                                 )
                                 .GetAttribute("aria-selected")
@@ -498,6 +466,14 @@ namespace AutoPixAiCreditClaimer.Pages
                                 changeDate.Date == DateTime.Now.Date
                                 && type == "Daily Claim"
                                 && !isClaimed
+                                && driver
+                                    .FindElement(
+                                        By.CssSelector(
+                                            "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                        )
+                                    )
+                                    .GetAttribute("innerHTML")
+                                    .ToLower() == "claimed"
                             )
                             {
                                 notifyIcon.ShowBalloonTip(
@@ -536,6 +512,8 @@ namespace AutoPixAiCreditClaimer.Pages
             catch (Exception ex)
             {
                 logger.Log($"Error: {ex.Message}");
+                MessageBox.Show("Error! \n" + ex.Message);
+                throw;
             }
             return Task.CompletedTask;
         }
@@ -545,7 +523,6 @@ namespace AutoPixAiCreditClaimer.Pages
             Console.WriteLine("Checking for popup");
             try
             {
-                //check for popup
                 driver
                     .FindElement(
                         By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")
@@ -557,7 +534,6 @@ namespace AutoPixAiCreditClaimer.Pages
             {
                 try
                 {
-                    //check for popup for browser is fullscreen
                     driver
                         .FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button"))
                         .Click();
@@ -574,59 +550,45 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #region List Control
 
-        // Method to refresh the ListView control with user items
         void refreshList()
         {
             lvaccounts.Items.Clear();
-            // Get the updated UserList from the ListHelper
-            UserList = ListHelper.UserList;
-            // Populate the ListView with user data
-            foreach (var item in UserList)
+            userList = ListHelper.UserList;
+            foreach (var item in userList)
             {
                 ListViewItem lw = new ListViewItem();
                 lw.Text = item.id.ToString();
                 lw.SubItems.Add(item.name);
                 lw.SubItems.Add(item.email);
-                lw.SubItems.Add("****************"); // Display asterisks for password
+                lw.SubItems.Add("****************");
                 lvaccounts.Items.Add(lw);
             }
         }
 
-        // Event handler for the "Add New" button click
         private void btnaddnew_Click(object sender, EventArgs e)
         {
-            // Open the "AddOrEditPage" dialog to add a new user item
             AddOrEditPage page = new AddOrEditPage();
             page.ShowDialog();
-            // Refresh the ListView after adding a new item
             refreshList();
         }
 
-        // Event handler for the "Edit" context menu item click
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Check if a single item is selected in the ListView
             if (lvaccounts.SelectedItems.Count == 1)
             {
-                // Get the selected user item from the UserList using the ListView selection
-                var selected = UserList
+                var selected = userList
                     .Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text))
                     .FirstOrDefault();
-                // Open the "AddOrEditPage" dialog to edit the selected user item
                 AddOrEditPage editPage = new AddOrEditPage(selected);
                 editPage.ShowDialog();
-                // Refresh the ListView after editing the item
                 refreshList();
             }
         }
 
-        // Event handler for the "Delete" context menu item click
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Check if a single item is selected in the ListView
             if (lvaccounts.SelectedItems.Count == 1)
             {
-                // Display a warning message box to confirm deletion
                 var res = MessageBox.Show(
                     "Are you sure you want to delete?",
                     "Warning!",
@@ -635,28 +597,21 @@ namespace AutoPixAiCreditClaimer.Pages
                 );
                 if (res == DialogResult.OK)
                 {
-                    // Get the selected user item from the UserList using the ListView selection
-                    var selected = UserList
+                    var selected = userList
                         .Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text))
                         .FirstOrDefault();
-                    // Remove the selected item from the UserList
-                    UserList.Remove(selected);
-                    // Update the ListHelper with the modified UserList
-                    ListHelper.UserList = UserList;
-                    // Refresh the ListView after deleting the item
+                    userList.Remove(selected);
+                    ListHelper.UserList = userList;
                     refreshList();
                 }
             }
         }
 
-        // Event handler for the "Run Single" context menu item click
         private void runSingleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Check if a single item is selected in the ListView and the claim worker is not busy
             if (lvaccounts.SelectedItems.Count == 1 && !ClaimWorker.IsBusy)
             {
-                // Get the selected user item from the UserList using the ListView selection
-                var selected = UserList
+                var selected = userList
                     .Where(x => x.id == int.Parse(lvaccounts.SelectedItems[0].Text))
                     .FirstOrDefault();
 
@@ -666,7 +621,6 @@ namespace AutoPixAiCreditClaimer.Pages
                 btnStartClaim.Enabled = false;
                 btnStartClaim.Text = "Working in progress...";
 
-                // Start the claim progress for the selected user
                 runClaimProgress(selected).Wait();
                 notifyIcon.ShowBalloonTip(
                     100,
@@ -680,7 +634,6 @@ namespace AutoPixAiCreditClaimer.Pages
             }
             else
             {
-                // Display a warning balloon tip if no item is selected, or more than one item is selected, or the claim worker is busy
                 if (lvaccounts.SelectedItems.Count == 0)
                     notifyIcon.ShowBalloonTip(
                         100,
@@ -705,10 +658,8 @@ namespace AutoPixAiCreditClaimer.Pages
             }
         }
 
-        // Event handler for the "Refresh" context menu item click
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Refresh the ListView to display the latest user items
             refreshList();
         }
 
@@ -716,38 +667,30 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #region Form Control
 
-        // Event handler for the "Minimize Form" button click
         private void btnminiform_Click(object sender, EventArgs e)
         {
-            // Minimize the form when the button is clicked
             this.WindowState = FormWindowState.Minimized;
         }
 
-        // Event handler for the "Hide Form" button click
         private void btnhideform_Click(object sender, EventArgs e)
         {
-            // Exit the application when the button is clicked
             System.Windows.Forms.Application.Exit();
         }
 
         #region Mouse move codes
-
-        // Track the mouse location when the form is clicked
-        private Point _mouseLoc;
+        private Point mouseLoc;
 
         private void FormMouseDown(object sender, MouseEventArgs e)
         {
-            _mouseLoc = e.Location;
+            mouseLoc = e.Location;
         }
 
-        // Move the form with the mouse movement
         private void FormMouseMove(object sender, MouseEventArgs e)
         {
-            // Move the form with the mouse if the left mouse button is pressed
             if (e.Button == MouseButtons.Left)
             {
-                int dx = e.Location.X - _mouseLoc.X;
-                int dy = e.Location.Y - _mouseLoc.Y;
+                int dx = e.Location.X - mouseLoc.X;
+                int dy = e.Location.Y - mouseLoc.Y;
                 this.Location = new Point(this.Location.X + dx, this.Location.Y + dy);
             }
         }
@@ -758,17 +701,13 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #region Notify Icon
 
-        // Event handler for the "Exit" context menu item click
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Exit the application when the "Exit" context menu item is clicked
             System.Windows.Forms.Application.Exit();
         }
 
-        // Event handler for the "Notify Icon" double-click
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            // Show the main form when the notify icon is double-clicked
             this.Show();
         }
 
@@ -776,10 +715,8 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #region Settings
 
-        // Event handler for the "Settings" button click
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            // Open the "SettingsPage" dialog to manage application settings
             SettingsPage page = new SettingsPage();
             page.ShowDialog();
         }
@@ -788,22 +725,18 @@ namespace AutoPixAiCreditClaimer.Pages
 
         #endregion
 
-        // Event handler for the "Start Claim" button click
         private void btnStartClaim_Click(object sender, EventArgs e)
         {
-            // Start the claim worker asynchronously
             btnStartClaim.Enabled = false;
             btnStartClaim.Text = "Working in progress...";
             ClaimWorker.RunWorkerAsync();
         }
 
-        // Event handler for the completion of the claim worker
         private void ClaimWorker_RunWorkerCompleted(
             object sender,
             System.ComponentModel.RunWorkerCompletedEventArgs e
         )
         {
-            // Show a balloon tip indicating the completion of the credit claim progress
             notifyIcon.ShowBalloonTip(
                 100,
                 "Info!",
@@ -816,7 +749,6 @@ namespace AutoPixAiCreditClaimer.Pages
 
             if (SettingsHelper.Settings.AutoExitApp)
             {
-                //Exit application if AutoExit is enabled
                 System.Windows.Forms.Application.Exit();
             }
         }

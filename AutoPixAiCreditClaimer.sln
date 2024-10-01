@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.33530.505
+VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoPixAiCreditClaimer", "AutoPixAiCreditClaimer.csproj", "{75585175-659D-4809-8A2D-50D44E24D431}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoPixAiCreditClaimer", "AutoPixAiCreditClaimer.csproj", "{02F7C970-B82E-456B-ADB7-35F19620D85D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{75585175-659D-4809-8A2D-50D44E24D431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75585175-659D-4809-8A2D-50D44E24D431}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75585175-659D-4809-8A2D-50D44E24D431}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75585175-659D-4809-8A2D-50D44E24D431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F7C970-B82E-456B-ADB7-35F19620D85D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F7C970-B82E-456B-ADB7-35F19620D85D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F7C970-B82E-456B-ADB7-35F19620D85D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F7C970-B82E-456B-ADB7-35F19620D85D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DC154ED6-C3C0-4F43-81FD-50DEBDD554DE}
+		SolutionGuid = {BA807059-85D3-4F75-9A52-E8CB34E22EDA}
 	EndGlobalSection
 EndGlobal
