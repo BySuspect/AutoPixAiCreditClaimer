@@ -132,7 +132,7 @@ namespace AutoPixAiCreditClaimer.Views
                     options.AddArgument("--headless=new");
                 }
                 options.AddArguments("--window-size=1,1");
-                options.AddArgument("--force-device-scale-factor=0.50");
+                options.AddArgument("--force-device-scale-factor=0.70");
                 options.AddArgument("--enable-automation");
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("--log-level=OFF");
@@ -143,7 +143,7 @@ namespace AutoPixAiCreditClaimer.Views
 
                 // Some driver improvements
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-                driver.Manage().Window.Size = new System.Drawing.Size(2000, 1600);
+                driver.Manage().Window.Size = new System.Drawing.Size(1500, 3000);
 
                 /* Login */
 
@@ -431,7 +431,7 @@ namespace AutoPixAiCreditClaimer.Views
                         driver
                             .FindElement(
                                 By.XPath(
-                                    "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                    "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                 )
                             )
                             .Click();
@@ -441,7 +441,7 @@ namespace AutoPixAiCreditClaimer.Views
                             driver
                                 .FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div[2]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                        "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                     )
                                 )
                                 .GetAttribute("aria-selected")
