@@ -1,0 +1,177 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.yml'
+      - '**/*.hbs'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    env:
+      EnablePreRelease: 'false' # true or false to enable pre-release like 1.0.0.0-pre
+      IsPreRelease: 'false' #leave false
+      EndProcess: 'false' #leave false
+      VERSION: '' #leave empty
+      ASSEMBLY_VERSION: '' #leave empty
+      FILE_VERSION: '' #leave empty
+      new_tag: '' #leave empty
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version information
+        id: version
+        shell: bash
+        run: |
+          fileContent=$(cat ./*.csproj)
+
+          versionLine=$(echo "$fileContent" | grep -oEm1 "(<Version>)(.*?)(<\/Version>)" | sed -E 's/<\/?Version>//g')
+          VERSION=$(echo "$versionLine" | awk '{$1=$1};1')
+
+          versionLine=$(echo "$fileContent" | grep -oEm1 "(<AssemblyVersion>)(.*?)(<\/AssemblyVersion>)" | sed -E 's/<\/?AssemblyVersion>//g')
+          ASSEMBLY_VERSION=$(echo "$versionLine" | awk '{$1=$1};1')
+
+          versionLine=$(echo "$fileContent" | grep -oEm1 "(<FileVersion>)(.*?)(<\/FileVersion>)" | sed -E 's/<\/?FileVersion>//g')
+          FILE_VERSION=$(echo "$versionLine" | awk '{$1=$1};1')
+
+          echo "ASSEMBLY_VERSION=$ASSEMBLY_VERSION" >> $GITHUB_ENV
+          echo "FILE_VERSION=$FILE_VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+          echo "ASSEMBLY_VERSION: $ASSEMBLY_VERSION"
+          echo "FILE_VERSION: $FILE_VERSION"
+          echo "VERSION: $VERSION"
+
+      - name: Check if tag exists
+        id: tag_check
+        shell: bash
+        run: |
+          git fetch --all
+
+          if [[ "${{ env.VERSION }}" == "0.0.0" ]]; then
+            echo "EndProcess=true" >> $GITHUB_ENV
+          fi
+
+          if git rev-parse -q --verify "refs/tags/v${{ env.VERSION }}" >/dev/null; then
+              if git rev-parse -q --verify "refs/tags/v${{ env.ASSEMBLY_VERSION }}-pre" >/dev/null; then
+                echo "EndProcess=true" >> $GITHUB_ENV
+              else
+                  if [[ "${{ env.EnablePreRelease }}" == "true" ]]; then
+                      echo "new_tag=v${{ env.ASSEMBLY_VERSION }}-pre" >> $GITHUB_ENV
+                      echo "IsPreRelease=true" >> $GITHUB_ENV
+                  else
+                      echo "new_tag=v${{ env.ASSEMBLY_VERSION }}" >> $GITHUB_ENV
+                      echo "EndProcess=true" >> $GITHUB_ENV
+                  fi
+              fi
+          else
+              echo "new_tag=v${{ env.VERSION }}" >> $GITHUB_ENV
+              echo "IsPreRelease=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create new tag
+        if: env.EndProcess == 'false'
+        shell: bash
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          new_tag="${{ env.new_tag }}"
+          git tag $new_tag
+          git push origin $new_tag
+
+      - name: Set up Node.js
+        if: env.EndProcess == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install auto-changelog
+        if: env.EndProcess == 'false'
+        run: npm install -g auto-changelog
+
+      - name: Generate Changelog
+        if: env.EndProcess == 'false'
+        run: |
+          git fetch --tags
+          auto-changelog --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml|\.hbs)' --tag-pattern '(.*)' --output RELEASE.md --backfill-limit false --starting-version ${{ env.new_tag }}
+
+      - name: Create Release for new tag
+        if: env.EndProcess == 'false'
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: '${{ env.new_tag }}'
+          release_name: '${{ env.new_tag }}'
+          draft: false
+          prerelease: false
+          body_path: RELEASE.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        if: env.EndProcess == 'false'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        if: env.EndProcess == 'false'
+        run: dotnet restore
+
+      - name: Build for x64
+        if: env.EndProcess == 'false'
+        run: dotnet publish --configuration Release --runtime win-x64 --self-contained false --output ./bin/Publish/win-x64
+
+      - name: Zip x64
+        if: env.EndProcess == 'false'
+        run: Compress-Archive -Path "./bin/Publish/win-x64/*" -DestinationPath "./bin/Publish/win-x64.zip"
+
+      - name: Upload x64 Release Asset
+        if: env.EndProcess == 'false'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/Publish/win-x64.zip
+          asset_name: win-x64.zip
+          asset_content_type: application/zip
+
+      - name: Build for x64
+        if: env.EndProcess == 'false'
+        run: dotnet publish --configuration Release --runtime win-x64 --self-contained false --output ./bin/Publish/win-x64
+
+      - name: Zip x64
+        if: env.EndProcess == 'false'
+        run: Compress-Archive -Path "./bin/Publish/win-x64/*" -DestinationPath "./bin/Publish/win-x64.zip"
+
+      - name: Upload x64 Release Asset
+        if: env.EndProcess == 'false'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/Publish/win-x64.zip
+          asset_name: win-x64.zip
+          asset_content_type: application/zip
+
+      - name: Run Changelog Workflow
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          repository: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: generate-changelog

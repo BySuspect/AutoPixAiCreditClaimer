@@ -1,15 +1,8 @@
-name: Generate and Commit Changelog
+name: Generate Changelog
 
 on:
-  push:
-    branches: ['main']
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.yml'
-      - '**/*.hbs'
-  workflow_dispatch:
   repository_dispatch:
-    types: [build-complete]
+    types: [generate-changelog]
 
 permissions:
   contents: write
@@ -27,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install auto-changelog
         run: npm install -g auto-changelog
