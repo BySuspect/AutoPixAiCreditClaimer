@@ -131,24 +131,28 @@ jobs:
         if: env.EndProcess == 'false'
         run: dotnet restore
 
-      - name: Build for x64
-        if: env.EndProcess == 'false'
-        run: dotnet publish --configuration Release --runtime win-x64 --self-contained false --output ./bin/Publish/win-x64
+# 86 bit build
 
-      - name: Zip x64
+      - name: Build for x86
         if: env.EndProcess == 'false'
-        run: Compress-Archive -Path "./bin/Publish/win-x64/*" -DestinationPath "./bin/Publish/win-x64.zip"
+        run: dotnet publish --configuration Release --runtime win-x86 --self-contained false --output ./bin/Publish/win-x86
 
-      - name: Upload x64 Release Asset
+      - name: Zip x86
+        if: env.EndProcess == 'false'
+        run: Compress-Archive -Path "./bin/Publish/win-x86/*" -DestinationPath "./bin/Publish/win-x86.zip"
+
+      - name: Upload x86 Release Asset
         if: env.EndProcess == 'false'
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/Publish/win-x64.zip
-          asset_name: win-x64.zip
+          asset_path: ./bin/Publish/win-x86.zip
+          asset_name: win-x86.zip
           asset_content_type: application/zip
+
+# 64 bit build
 
       - name: Build for x64
         if: env.EndProcess == 'false'
