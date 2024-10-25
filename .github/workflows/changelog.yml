@@ -1,6 +1,7 @@
 name: Generate Changelog
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [generate-changelog]
 
@@ -26,7 +27,9 @@ jobs:
         run: npm install -g auto-changelog
 
       - name: Generate Changelog
-        run: auto-changelog --unreleased --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml)' --tag-pattern '(\v.|\V.)' --output CHANGELOG.md --backfill-limit false
+        run: |
+          git fetch --all
+          auto-changelog --unreleased --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml)' --tag-pattern '(.*)' --output CHANGELOG.md --backfill-limit false
 
       - name: Commit and push changelog
         env:
