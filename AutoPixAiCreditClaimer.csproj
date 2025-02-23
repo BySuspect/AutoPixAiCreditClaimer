@@ -16,7 +16,7 @@
         <AssemblyName>AutoPixAiCreditClaimer</AssemblyName>
         <Authors>BySuspect</Authors>
         <Description>Automation for Pixai.art</Description>
-        <Copyright>Copyright ©  2023 Made by BySuspect</Copyright>
+        <Copyright>Copyright © 2023 Made by BySuspect</Copyright>
         <ApplicationIcon>icon.ico</ApplicationIcon>
     </PropertyGroup>
 
