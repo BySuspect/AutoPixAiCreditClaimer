@@ -270,7 +270,7 @@ namespace AutoPixAiCreditClaimer.Views
                                     }
                                     catch
                                     {
-                                        Thread.Sleep(5000);
+                                        Thread.Sleep(10000);
                                         if (!isPopupClosed)
                                         {
                                             isPopupClosed = checkPopup(driver);
@@ -278,7 +278,7 @@ namespace AutoPixAiCreditClaimer.Views
                                             {
                                                 logger.Log("*****Cant skip popup*****");
                                                 MessageBox.Show(
-                                                    "There is an error now please open issue on github for fix."
+                                                    "There is an error now please open issue on github for fix.\nError code: 0"
                                                 );
                                                 goto endprogress;
                                             }
@@ -424,7 +424,7 @@ namespace AutoPixAiCreditClaimer.Views
                         catch
                         {
                             MessageBox.Show(
-                                "Something is broken right now. Please open an issue on GitHub!"
+                                "Something is broken right now. Please open an issue on GitHub!\nError code: 1"
                             );
                         }
                     }
@@ -433,21 +433,27 @@ namespace AutoPixAiCreditClaimer.Views
                     checkIsClaimed:
 
                     logger.Log("Claim checking from history");
-
+                    int testCounter = 0;
                     #region Open credit history tab
                     try
                     {
                         clickCredits:
 
-                        Thread.Sleep(500);
-                        // Click on the credits tab
-                        driver
-                            .FindElement(
+                        Thread.Sleep(1000);
+                        testCounter = 0;
+
+                        // Click on the credits tabBy.XPath(
+                        ((IJavaScriptExecutor)driver).ExecuteScript(
+                            "arguments[0].click();",
+                            driver.FindElement(
                                 By.XPath(
                                     "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                 )
                             )
-                            .Click();
+                        );
+
+                        Thread.Sleep(1000);
+                        testCounter = 1;
 
                         // Check if the credits tab is selected
                         bool isSelected = bool.Parse(
@@ -459,14 +465,19 @@ namespace AutoPixAiCreditClaimer.Views
                                 )
                                 .GetAttribute("aria-selected")
                         );
+
+                        testCounter = 2;
+
                         if (!isSelected)
                             goto clickCredits;
-                        Thread.Sleep(1000);
+
+                        Thread.Sleep(1500);
 
                         // Getting the credits history list
                         var creditsList = driver.FindElements(By.CssSelector("table > tbody > tr"));
                         foreach (var item in creditsList)
                         {
+                            Thread.Sleep(100);
                             IWebElement th = item.FindElement(By.CssSelector("th"));
                             IList<IWebElement> tds = item.FindElements(By.CssSelector("td"));
 
@@ -474,19 +485,29 @@ namespace AutoPixAiCreditClaimer.Views
                             string type = tds[0].Text; // Type: "Daily Claim"
                             DateTime.TryParse(tds[1].Text.Split('(')[0], out DateTime changeDate);
 
-                            // Check if the credit has already been claimed for today
-                            if (
-                                changeDate.Date == DateTime.Now.Date
-                                && type == "Daily Claim"
-                                && !isClaimed
-                                && driver
+                            string claimBtnText = "";
+                            try
+                            {
+                                claimBtnText = driver
                                     .FindElement(
                                         By.CssSelector(
                                             "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
                                         )
                                     )
                                     .GetAttribute("innerHTML")
-                                    .ToLower() == "claimed"
+                                    .ToLower();
+                            }
+                            catch
+                            {
+                                new Exception("cant get claim button text.");
+                            }
+
+                            // Check if the credit has already been claimed for today
+                            if (
+                                changeDate.Date == DateTime.Now.Date
+                                && type == "Daily Claim"
+                                && !isClaimed
+                                && claimBtnText == "claimed"
                             )
                             {
                                 notifyIcon.ShowBalloonTip(
@@ -506,9 +527,9 @@ namespace AutoPixAiCreditClaimer.Views
                     }
                     catch (Exception ex)
                     {
-                        logger.Log("Error: " + ex.Message);
+                        logger.Log($"TestNum: {testCounter} - Error: " + ex.Message);
                         MessageBox.Show(
-                            "There is an error now please open issue on github for fix."
+                            "There is an error now please open issue on github for fix.\nError code: 2"
                         );
                     }
                     #endregion
