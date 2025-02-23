@@ -38,6 +38,8 @@ namespace AutoPixAiCreditClaimer.Views
                 ClaimWorker.RunWorkerAsync();
         }
 
+        #region App Update Check
+
         static async Task CheckVersion()
         {
             string[] serverVersion = (await GetLatestReleaseVersion())
@@ -98,6 +100,7 @@ namespace AutoPixAiCreditClaimer.Views
                 return null;
             }
         }
+        #endregion
 
         private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
@@ -129,7 +132,9 @@ namespace AutoPixAiCreditClaimer.Views
                 ChromeOptions options = new ChromeOptions();
                 if (!SettingsHelper.Settings.showBrowserOnClaimProgress)
                 {
+#if !DEBUG
                     options.AddArgument("--headless=new");
+#endif
                 }
                 options.AddArguments("--window-size=1,1");
                 options.AddArgument("--force-device-scale-factor=0.70");
@@ -184,7 +189,9 @@ namespace AutoPixAiCreditClaimer.Views
                 }
                 #endregion
 
-                logger.Log($"{user.name} - Successfully logged in.");
+                logger.Log(
+                    $"{user.name} - Successfully logged in. - isPopupClosed:{isPopupClosed}"
+                );
 
                 Thread.Sleep(300);
 
@@ -263,9 +270,18 @@ namespace AutoPixAiCreditClaimer.Views
                                     }
                                     catch
                                     {
+                                        Thread.Sleep(5000);
                                         if (!isPopupClosed)
                                         {
                                             isPopupClosed = checkPopup(driver);
+                                            if (!isPopupClosed)
+                                            {
+                                                logger.Log("*****Cant skip popup*****");
+                                                MessageBox.Show(
+                                                    "There is an error now please open issue on github for fix."
+                                                );
+                                                goto endprogress;
+                                            }
                                         }
                                     }
                                 }
@@ -276,7 +292,7 @@ namespace AutoPixAiCreditClaimer.Views
                     }
                     #endregion
 
-                    logger.Log("Profile button clicked.");
+                    logger.Log($"Profile button clicked. - isPopupClosed:{isPopupClosed}");
 
                     #region Open profile
                     drowdownmenu:
@@ -326,7 +342,7 @@ namespace AutoPixAiCreditClaimer.Views
                     }
                     #endregion
 
-                    logger.Log("Profile opened.");
+                    logger.Log($"Profile opened. - isPopupClosed:{isPopupClosed}");
 
                     #region Claim credit
                     bool isClaimed = false;
@@ -407,11 +423,8 @@ namespace AutoPixAiCreditClaimer.Views
                         }
                         catch
                         {
-                            notifyIcon.ShowBalloonTip(
-                                1000,
-                                "Error!",
-                                "Something is broken right now. Please open an issue on GitHub!",
-                                ToolTipIcon.Warning
+                            MessageBox.Show(
+                                "Something is broken right now. Please open an issue on GitHub!"
                             );
                         }
                     }
@@ -541,7 +554,18 @@ namespace AutoPixAiCreditClaimer.Views
                 }
                 catch
                 {
-                    return false;
+                    try
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript(
+                            "arguments[0].click();",
+                            driver.FindElement(By.CssSelector("button[aria-label='Dismiss']"))
+                        );
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
             }
         }
