@@ -49,6 +49,8 @@
             btnStartClaim = new Button();
             ClaimWorker = new System.ComponentModel.BackgroundWorker();
             btnSettings = new Button();
+            label1 = new Label();
+            lblInfo = new Label();
             notifymenu.SuspendLayout();
             listmenu.SuspendLayout();
             SuspendLayout();
@@ -63,14 +65,15 @@
             // 
             // notifymenu
             // 
+            notifymenu.ImageScalingSize = new Size(18, 18);
             notifymenu.Items.AddRange(new ToolStripItem[] { ecitToolStripMenuItem });
             notifymenu.Name = "notifymenu";
-            notifymenu.Size = new Size(94, 26);
+            notifymenu.Size = new Size(97, 26);
             // 
             // ecitToolStripMenuItem
             // 
             ecitToolStripMenuItem.Name = "ecitToolStripMenuItem";
-            ecitToolStripMenuItem.Size = new Size(93, 22);
+            ecitToolStripMenuItem.Size = new Size(96, 22);
             ecitToolStripMenuItem.Text = "Exit";
             ecitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -160,35 +163,36 @@
             // 
             // listmenu
             // 
+            listmenu.ImageScalingSize = new Size(18, 18);
             listmenu.Items.AddRange(new ToolStripItem[] { runSingleToolStripMenuItem, editToolStripMenuItem, deleteToolStripMenuItem, refreshToolStripMenuItem });
             listmenu.Name = "listmenu";
-            listmenu.Size = new Size(131, 92);
+            listmenu.Size = new Size(138, 92);
             // 
             // runSingleToolStripMenuItem
             // 
             runSingleToolStripMenuItem.Name = "runSingleToolStripMenuItem";
-            runSingleToolStripMenuItem.Size = new Size(130, 22);
+            runSingleToolStripMenuItem.Size = new Size(137, 22);
             runSingleToolStripMenuItem.Text = "Run Single";
             runSingleToolStripMenuItem.Click += runSingleToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(130, 22);
+            editToolStripMenuItem.Size = new Size(137, 22);
             editToolStripMenuItem.Text = "Edit";
             editToolStripMenuItem.Click += editToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(130, 22);
+            deleteToolStripMenuItem.Size = new Size(137, 22);
             deleteToolStripMenuItem.Text = "Delete";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // refreshToolStripMenuItem
             // 
             refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            refreshToolStripMenuItem.Size = new Size(130, 22);
+            refreshToolStripMenuItem.Size = new Size(137, 22);
             refreshToolStripMenuItem.Text = "Refresh";
             refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
             // 
@@ -236,11 +240,31 @@
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btnSettings_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(14, 6);
+            label1.Name = "label1";
+            label1.Size = new Size(87, 17);
+            label1.TabIndex = 4;
+            label1.Text = "Working On:";
+            // 
+            // lblInfo
+            // 
+            lblInfo.AutoSize = true;
+            lblInfo.Location = new Point(107, 6);
+            lblInfo.Name = "lblInfo";
+            lblInfo.Size = new Size(57, 17);
+            lblInfo.TabIndex = 0;
+            lblInfo.Text = "Nothing";
+            // 
             // MainView
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(666, 211);
+            Controls.Add(lblInfo);
+            Controls.Add(label1);
             Controls.Add(btnSettings);
             Controls.Add(btnStartClaim);
             Controls.Add(btnaddnew);
@@ -258,6 +282,7 @@
             notifymenu.ResumeLayout(false);
             listmenu.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -281,5 +306,7 @@
         private System.ComponentModel.BackgroundWorker ClaimWorker;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.ToolStripMenuItem runSingleToolStripMenuItem;
+        private Label label1;
+        private Label lblInfo;
     }
 }

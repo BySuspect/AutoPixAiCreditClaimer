@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -113,6 +113,11 @@ namespace AutoPixAiCreditClaimer.Views
             logger = new LoggingHelper(logPath);
             logger.Log($"App version: {System.Windows.Forms.Application.ProductVersion}");
             logger.Log("Progress Started!");
+
+            if (lblInfo.InvokeRequired)
+                lblInfo.Invoke(new Action(() => lblInfo.Text = user.name));
+            else
+                lblInfo.Text = user.name;
 
             bool isPopupClosed = false;
 
@@ -577,15 +582,20 @@ namespace AutoPixAiCreditClaimer.Views
                     endprogress:
                     driver.Quit();
                     logger.Log($"{user.name} - Progress done.");
-                endprogress:
-                driver.Quit();
-                logger.Log($"{user.name} - Progress done.");
+                    if (lblInfo.InvokeRequired)
+                        lblInfo.Invoke(new Action(() => lblInfo.Text = "Finished!"));
+                    else
+                        lblInfo.Text = "Finished!";
                 }
             }
             catch (Exception ex)
             {
                 logger.Log($"Error: {ex.Message}");
                 MessageBox.Show("Error! \n" + ex.Message);
+                if (lblInfo.InvokeRequired)
+                    lblInfo.Invoke(new Action(() => lblInfo.Text = "Error!"));
+                else
+                    lblInfo.Text = "Error!";
                 throw;
             }
             return Task.CompletedTask;
