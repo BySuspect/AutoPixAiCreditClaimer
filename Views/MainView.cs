@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using AutoPixAiCreditClaimer.Helpers;
 using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace AutoPixAiCreditClaimer.Views
 {
@@ -49,22 +51,24 @@ namespace AutoPixAiCreditClaimer.Views
                 .Split('.');
             string[] currentVersion = Application.ProductVersion.Split('.');
 
-            if (int.Parse(serverVersion[0]) > int.Parse(currentVersion[0]))
+            for (int i = 0; i < serverVersion.Length; i++)
             {
-                MessageBox.Show("New version available! Please Update.");
-            }
-            else if (int.Parse(serverVersion[0]) == int.Parse(currentVersion[0]))
-            {
-                if (int.Parse(serverVersion[1]) > int.Parse(currentVersion[1]))
+                if (int.Parse(serverVersion[i]) > int.Parse(currentVersion[i]))
                 {
                     MessageBox.Show("New version available! Please Update.");
+                    Process.Start(
+                        new ProcessStartInfo
+                        {
+                            FileName =
+                                "https://github.com/BySuspect/AutoPixAiCreditClaimer/releases/latest",
+                            UseShellExecute = true,
+                        }
+                    );
+                    return;
                 }
-                else if (int.Parse(serverVersion[1]) == int.Parse(currentVersion[1]))
+                else if (int.Parse(serverVersion[i]) < int.Parse(currentVersion[i]))
                 {
-                    if (int.Parse(serverVersion[2]) > int.Parse(currentVersion[2]))
-                    {
-                        MessageBox.Show("New version available! Please Update.");
-                    }
+                    return;
                 }
             }
         }
@@ -88,12 +92,9 @@ namespace AutoPixAiCreditClaimer.Views
                     string responseBody = await response.Content.ReadAsStringAsync();
                     JObject jsonObj = JObject.Parse(responseBody);
                     JToken tag = jsonObj["tag_name"];
-                    if (tag != null)
+                    if (tag != null && !tag.ToString().ToLower().Contains("pre"))
                     {
-                        if (tag.ToString().ToLower().Contains("pre"))
-                            return null;
-                        else
-                            return tag.ToString();
+                        return tag.ToString();
                     }
                 }
 
@@ -102,16 +103,7 @@ namespace AutoPixAiCreditClaimer.Views
         }
         #endregion
 
-        private void ClaimWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            foreach (var user in userList)
-            {
-                runClaimProgress(user).Wait();
-                Thread.Sleep(49);
-            }
-        }
-
-        private Task runClaimProgress(UserModel user)
+        private async Task<Task> runClaimProgress(UserModel user)
         {
             string logPath = Path.Combine(
                 References.AppFilesPath,
@@ -144,20 +136,21 @@ namespace AutoPixAiCreditClaimer.Views
                 options.AddArgument(
                     "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36"
                 );
-                IWebDriver driver = new ChromeDriver(service, options);
-
-                // Some driver improvements
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-                driver.Manage().Window.Size = new System.Drawing.Size(1500, 3000);
-
-                /* Login */
-
-                driver.Navigate().GoToUrl("https://pixai.art/login");
-
-                #region Login
-                while (true)
+                using (IWebDriver driver = new ChromeDriver(service, options))
                 {
-                    try
+                    // Some driver improvements
+                    driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+                    driver.Manage().Window.Size = new System.Drawing.Size(1500, 3000);
+
+                    /* Login */
+
+                    driver.Navigate().GoToUrl("https://pixai.art/login");
+
+                    #region Login
+                    int loginPageNavigateCounter = 0;
+                    const int maxLoginAttempts = 10;
+
+                    while (loginPageNavigateCounter <= maxLoginAttempts)
                     {
                         try
                         {
@@ -167,84 +160,108 @@ namespace AutoPixAiCreditClaimer.Views
                                     By.CssSelector("form > div > div > button:nth-of-type(4)")
                                 )
                                 .Click();
-                        }
-                        catch { }
-
-                        // Enter the user's email and password
-                        var emailInput = driver.FindElement(By.Id("email-input"));
-                        emailInput.Clear();
-                        emailInput.SendKeys(user.email);
-
-                        var passwordInput = driver.FindElement(By.Id("password-input"));
-                        passwordInput.Clear();
-                        passwordInput.SendKeys(user.pass);
-
-                        // Submit the login form
-                        driver.FindElement(By.CssSelector("button[type='submit']")).Submit();
-                        break;
-                    }
-                    catch { }
-
-                    Thread.Sleep(49);
-                }
-                #endregion
-
-                logger.Log(
-                    $"{user.name} - Successfully logged in. - isPopupClosed:{isPopupClosed}"
-                );
-
-                Thread.Sleep(300);
-
-                /* After Login */
-
-                try
-                {
-                    #region Select profile button
-                    // Find and click on the profile button
-                    while (true)
-                    {
-                        try
-                        {
-                            // Checking if the account is logged in
-                            if (
-                                driver
-                                    .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
-                                    .Text.Contains("Sign Up")
-                                || driver
-                                    .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
-                                    .Text.Contains("Log in")
-                            )
-                            {
-                                continue;
-                            }
-                            else
-                                throw new Exception();
+                            break;
                         }
                         catch
                         {
+                            if (loginPageNavigateCounter == maxLoginAttempts)
+                            {
+                                logger.Log("*****Can't navigate to login page*****");
+                                MessageBox.Show(
+                                    "There is an error now please open issue on GitHub for fix.\nError code: 3"
+                                );
+                                goto endprogress;
+                            }
+
                             Thread.Sleep(300);
+                            loginPageNavigateCounter++;
+                        }
+                    }
 
-                            isPopupClosed = checkPopup(driver);
+                    // Enter the user's email and password
+                    var emailInput = driver.FindElement(By.Id("email-input"));
+                    emailInput.Clear();
+                    emailInput.SendKeys(user.email);
 
+                    var passwordInput = driver.FindElement(By.Id("password-input"));
+                    passwordInput.Clear();
+                    passwordInput.SendKeys(user.pass);
+
+                    // Submit the login form
+                    driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+
+                    while (true)
+                    {
+                        Thread.Sleep(100);
+                        try
+                        {
+                            string errorText = driver
+                                .FindElement(
+                                    By.CssSelector(
+                                        "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                    )
+                                )
+                                .GetAttribute("innerHTML");
+
+                            if (errorText == "Network Error")
+                            {
+                                logger.Log("*****Network Error*****");
+                                MessageBox.Show(
+                                    "There is a network error!\nCheck your connection."
+                                );
+                                goto endprogress;
+                            }
+                        }
+                        catch { }
+                        var url = driver.Url.TrimEnd('/');
+                        if (url is "https://pixai.art")
+                            break;
+                    }
+                    #endregion
+
+                    logger.Log(
+                        $"{user.name} - Successfully logged in. - isPopupClosed:{isPopupClosed}"
+                    );
+
+                    Thread.Sleep(300);
+
+                    /* After Login */
+
+                    try
+                    {
+                        #region Select profile button
+                        // Find and click on the profile button
+                        while (true)
+                        {
                             try
                             {
-                                // Check if the profile has an image and click on it
-                                driver
-                                    .FindElement(
-                                        By.CssSelector("header > span:nth-of-type(4) > img")
-                                    )
-                                    .Click();
-                                Thread.Sleep(300);
-                                break;
+                                // Checking if the account is logged in
+                                if (
+                                    driver
+                                        .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
+                                        .Text.Contains("Sign Up")
+                                    || driver
+                                        .FindElement(By.CssSelector("header > div:nth-of-type(2)"))
+                                        .Text.Contains("Log in")
+                                )
+                                {
+                                    continue;
+                                }
+                                else
+                                    throw new Exception();
                             }
                             catch
                             {
+                                Thread.Sleep(300);
+
+                                isPopupClosed = checkPopup(driver);
+
                                 try
                                 {
-                                    // If the profile doesn't have an image, click on a different element
+                                    // Check if the profile has an image and click on it
                                     driver
                                         .FindElement(
-                                            By.CssSelector("header > span:nth-of-type(4) > div")
+                                            By.CssSelector("header > span:nth-of-type(4) > img")
                                         )
                                         .Click();
                                     Thread.Sleep(300);
@@ -254,78 +271,79 @@ namespace AutoPixAiCreditClaimer.Views
                                 {
                                     try
                                     {
-                                        // Check if the password is incorrect
-                                        driver.FindElement(
-                                            By.CssSelector(
-                                                "svg[data-testid='ReportProblemOutlinedIcon']"
+                                        // If the profile doesn't have an image, click on a different element
+                                        driver
+                                            .FindElement(
+                                                By.CssSelector("header > span:nth-of-type(4) > div")
                                             )
-                                        );
-                                        notifyIcon.ShowBalloonTip(
-                                            1000,
-                                            "Error!",
-                                            $"{user.name} is an Invalid Account",
-                                            ToolTipIcon.Error
-                                        );
-                                        goto endprogress;
+                                            .Click();
+                                        Thread.Sleep(300);
+                                        break;
                                     }
                                     catch
                                     {
-                                        Thread.Sleep(10000);
-                                        if (!isPopupClosed)
+                                        try
                                         {
-                                            isPopupClosed = checkPopup(driver);
+                                            // Check if the password is incorrect
+                                            driver.FindElement(
+                                                By.CssSelector(
+                                                    "svg[data-testid='ReportProblemOutlinedIcon']"
+                                                )
+                                            );
+                                            notifyIcon.ShowBalloonTip(
+                                                1000,
+                                                "Error!",
+                                                $"{user.name} is an Invalid Account",
+                                                ToolTipIcon.Error
+                                            );
+                                            goto endprogress;
+                                        }
+                                        catch
+                                        {
+                                            Thread.Sleep(10000);
                                             if (!isPopupClosed)
                                             {
-                                                logger.Log("*****Cant skip popup*****");
-                                                MessageBox.Show(
-                                                    "There is an error now please open issue on github for fix.\nError code: 0"
-                                                );
-                                                goto endprogress;
+                                                isPopupClosed = checkPopup(driver);
+                                                if (!isPopupClosed)
+                                                {
+                                                    logger.Log("*****Cant skip popup*****");
+                                                    MessageBox.Show(
+                                                        "There is an error now please open issue on github for fix.\nError code: 0"
+                                                    );
+                                                    goto endprogress;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+
+                            Thread.Sleep(49);
                         }
+                        #endregion
 
-                        Thread.Sleep(49);
-                    }
-                    #endregion
+                        logger.Log($"Profile button clicked. - isPopupClosed:{isPopupClosed}");
 
-                    logger.Log($"Profile button clicked. - isPopupClosed:{isPopupClosed}");
-
-                    #region Open profile
-                    drowdownmenu:
-                    // Find and click on the profile button in the dropdown menu
-                    try
-                    {
-                        driver
-                            .FindElement(
-                                By.CssSelector(
-                                    "ul[role='menu'] > li[role='menuitem']:nth-of-type(1)"
-                                )
-                            )
-                            .Click();
-                        Thread.Sleep(300);
-                    }
-                    catch
-                    {
-                        // Checking to if automation is not clicked to profile button
+                        #region Open profile
+                        drowdownmenu:
+                        // Find and click on the profile button in the dropdown menu
                         try
                         {
-                            driver.FindElement(By.CssSelector("header > img")).Click();
+                            driver
+                                .FindElement(
+                                    By.CssSelector(
+                                        "ul[role='menu'] > li[role='menuitem']:nth-of-type(1)"
+                                    )
+                                )
+                                .Click();
                             Thread.Sleep(300);
-                            goto drowdownmenu;
                         }
                         catch
                         {
-                            if (!isPopupClosed)
-                            {
-                                isPopupClosed = checkPopup(driver);
-                            }
+                            // Checking to if automation is not clicked to profile button
                             try
                             {
-                                driver.FindElement(By.CssSelector("header > div")).Click();
+                                driver.FindElement(By.CssSelector("header > img")).Click();
                                 Thread.Sleep(300);
                                 goto drowdownmenu;
                             }
@@ -335,80 +353,46 @@ namespace AutoPixAiCreditClaimer.Views
                                 {
                                     isPopupClosed = checkPopup(driver);
                                 }
-                                Thread.Sleep(300);
-                                goto drowdownmenu;
+                                try
+                                {
+                                    driver.FindElement(By.CssSelector("header > div")).Click();
+                                    Thread.Sleep(300);
+                                    goto drowdownmenu;
+                                }
+                                catch
+                                {
+                                    if (!isPopupClosed)
+                                    {
+                                        isPopupClosed = checkPopup(driver);
+                                    }
+                                    Thread.Sleep(300);
+                                    goto drowdownmenu;
+                                }
                             }
                         }
-                    }
-                    #endregion
+                        #endregion
 
-                    logger.Log($"Profile opened. - isPopupClosed:{isPopupClosed}");
+                        logger.Log($"Profile opened. - isPopupClosed:{isPopupClosed}");
 
-                    #region Claim credit
-                    bool isClaimed = false;
+                        #region Claim credit
+                        bool isClaimed = false;
 
-                    goto checkIsClaimed;
+                        goto checkIsClaimed;
 
-                    claimcredit:
-                    try
-                    {
-                        string claimBtnText = driver
-                            .FindElement(
-                                By.CssSelector(
-                                    "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
-                                )
-                            )
-                            .GetAttribute("innerHTML");
-                        if (claimBtnText.ToLower() != "claimed")
+                        claimcredit:
+                        try
                         {
-                            miniClaimLoop:
-                            // Click on the claim button
-                            driver
-                                .FindElement(
-                                    By.CssSelector(
-                                        "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
-                                    )
-                                )
-                                .Click();
-                            Thread.Sleep(300);
-                            driver.Navigate().Refresh();
-                            Thread.Sleep(300);
-                            claimBtnText = driver
+                            string claimBtnText = driver
                                 .FindElement(
                                     By.CssSelector(
                                         "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
                                     )
                                 )
                                 .GetAttribute("innerHTML");
-
-                            // Check if the claim button text has changed to "Claimed"
-                            if (claimBtnText.ToLower() == "claimed")
+                            if (claimBtnText.ToLower() != "claimed")
                             {
-                                isClaimed = true;
-                                goto checkIsClaimed;
-                            }
-                            else
-                                goto miniClaimLoop;
-                        }
-                        else if (claimBtnText.ToLower() == "claimed")
-                        {
-                            goto checkIsClaimed;
-                        }
-                        else
-                            goto claimcredit;
-                    }
-                    catch
-                    {
-                        if (!isPopupClosed)
-                        {
-                            isPopupClosed = checkPopup(driver);
-                        }
-                        try
-                        {
-                            Thread.Sleep(500);
-                            if (!isClaimed)
-                            {
-                                // Check is page style changed
+                                miniClaimLoop:
+                                // Click on the claim button
                                 driver
                                     .FindElement(
                                         By.CssSelector(
@@ -416,132 +400,187 @@ namespace AutoPixAiCreditClaimer.Views
                                         )
                                     )
                                     .Click();
-                                goto claimcredit;
-                            }
-                            else
-                                goto endprogress;
-                        }
-                        catch
-                        {
-                            MessageBox.Show(
-                                "Something is broken right now. Please open an issue on GitHub!\nError code: 1"
-                            );
-                        }
-                    }
-                    #endregion
-
-                    checkIsClaimed:
-
-                    logger.Log("Claim checking from history");
-                    int testCounter = 0;
-                    #region Open credit history tab
-                    try
-                    {
-                        clickCredits:
-
-                        Thread.Sleep(1000);
-                        testCounter = 0;
-
-                        // Click on the credits tabBy.XPath(
-                        ((IJavaScriptExecutor)driver).ExecuteScript(
-                            "arguments[0].click();",
-                            driver.FindElement(
-                                By.XPath(
-                                    "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
-                                )
-                            )
-                        );
-
-                        Thread.Sleep(1000);
-                        testCounter = 1;
-
-                        // Check if the credits tab is selected
-                        bool isSelected = bool.Parse(
-                            driver
-                                .FindElement(
-                                    By.XPath(
-                                        "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
-                                    )
-                                )
-                                .GetAttribute("aria-selected")
-                        );
-
-                        testCounter = 2;
-
-                        if (!isSelected)
-                            goto clickCredits;
-
-                        Thread.Sleep(1500);
-
-                        // Getting the credits history list
-                        var creditsList = driver.FindElements(By.CssSelector("table > tbody > tr"));
-                        foreach (var item in creditsList)
-                        {
-                            Thread.Sleep(100);
-                            IWebElement th = item.FindElement(By.CssSelector("th"));
-                            IList<IWebElement> tds = item.FindElements(By.CssSelector("td"));
-
-                            string change = th.FindElement(By.CssSelector("pre")).Text;
-                            string type = tds[0].Text; // Type: "Daily Claim"
-                            DateTime.TryParse(tds[1].Text.Split('(')[0], out DateTime changeDate);
-
-                            string claimBtnText = "";
-                            try
-                            {
+                                Thread.Sleep(300);
+                                driver.Navigate().Refresh();
+                                Thread.Sleep(300);
                                 claimBtnText = driver
                                     .FindElement(
                                         By.CssSelector(
                                             "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
                                         )
                                     )
-                                    .GetAttribute("innerHTML")
-                                    .ToLower();
+                                    .GetAttribute("innerHTML");
+
+                                // Check if the claim button text has changed to "Claimed"
+                                if (claimBtnText.ToLower() == "claimed")
+                                {
+                                    isClaimed = true;
+                                    goto checkIsClaimed;
+                                }
+                                else
+                                    goto miniClaimLoop;
+                            }
+                            else if (claimBtnText.ToLower() == "claimed")
+                            {
+                                goto checkIsClaimed;
+                            }
+                            else
+                                goto claimcredit;
+                        }
+                        catch
+                        {
+                            if (!isPopupClosed)
+                            {
+                                isPopupClosed = checkPopup(driver);
+                            }
+                            try
+                            {
+                                Thread.Sleep(500);
+                                if (!isClaimed)
+                                {
+                                    // Check is page style changed
+                                    driver
+                                        .FindElement(
+                                            By.CssSelector(
+                                                "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+                                            )
+                                        )
+                                        .Click();
+                                    goto claimcredit;
+                                }
+                                else
+                                    goto endprogress;
                             }
                             catch
                             {
-                                new Exception("cant get claim button text.");
-                            }
-
-                            // Check if the credit has already been claimed for today
-                            if (
-                                changeDate.Date == DateTime.Now.Date
-                                && type == "Daily Claim"
-                                && !isClaimed
-                                && claimBtnText == "claimed"
-                            )
-                            {
-                                notifyIcon.ShowBalloonTip(
-                                    100,
-                                    "Info!",
-                                    $"The credit has already been claimed for {user.name}",
-                                    ToolTipIcon.Info
+                                MessageBox.Show(
+                                    "Something is broken right now. Please open an issue on GitHub!\nError code: 1"
                                 );
-                                logger.Log($"{user.name} - Already Claimed!");
-                                isClaimed = true;
-                                goto endprogress;
                             }
                         }
-                        Thread.Sleep(500);
-                        if (!isClaimed)
-                            goto claimcredit;
+                        #endregion
+
+                        checkIsClaimed:
+
+                        logger.Log("Claim checking from history");
+                        int testCounter = 0;
+                        #region Open credit history tab
+                        try
+                        {
+                            clickCredits:
+
+                            Thread.Sleep(1000);
+                            testCounter = 0;
+
+                            // Click on the credits tabBy.XPath(
+                            ((IJavaScriptExecutor)driver).ExecuteScript(
+                                "arguments[0].click();",
+                                driver.FindElement(
+                                    By.XPath(
+                                        "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                    )
+                                )
+                            );
+
+                            Thread.Sleep(1000);
+                            testCounter = 1;
+
+                            // Check if the credits tab is selected
+                            bool isSelected = bool.Parse(
+                                driver
+                                    .FindElement(
+                                        By.XPath(
+                                            "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                        )
+                                    )
+                                    .GetAttribute("aria-selected")
+                            );
+
+                            testCounter = 2;
+
+                            if (!isSelected)
+                                goto clickCredits;
+
+                            Thread.Sleep(1500);
+
+                            // Getting the credits history list
+                            var creditsList = driver.FindElements(
+                                By.CssSelector("table > tbody > tr")
+                            );
+                            foreach (var item in creditsList)
+                            {
+                                Thread.Sleep(100);
+                                IWebElement th = item.FindElement(By.CssSelector("th"));
+                                IList<IWebElement> tds = item.FindElements(By.CssSelector("td"));
+
+                                string change = th.FindElement(By.CssSelector("pre")).Text;
+                                string type = tds[0].Text; // Type: "Daily Claim"
+                                DateTime.TryParse(
+                                    tds[1].Text.Split('(')[0],
+                                    out DateTime changeDate
+                                );
+
+                                string claimBtnText = "";
+                                try
+                                {
+                                    claimBtnText = driver
+                                        .FindElement(
+                                            By.CssSelector(
+                                                "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                            )
+                                        )
+                                        .GetAttribute("innerHTML")
+                                        .ToLower();
+                                }
+                                catch
+                                {
+                                    new Exception("cant get claim button text.");
+                                }
+
+                                // Check if the credit has already been claimed for today
+                                if (
+                                    changeDate.Date == DateTime.Now.Date
+                                    && type == "Daily Claim"
+                                    && !isClaimed
+                                    && claimBtnText == "claimed"
+                                )
+                                {
+                                    notifyIcon.ShowBalloonTip(
+                                        100,
+                                        "Info!",
+                                        $"The credit has already been claimed for {user.name}",
+                                        ToolTipIcon.Info
+                                    );
+                                    logger.Log($"{user.name} - Already Claimed!");
+                                    isClaimed = true;
+                                    goto endprogress;
+                                }
+                            }
+                            Thread.Sleep(500);
+                            if (!isClaimed)
+                                goto claimcredit;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Log($"TestNum: {testCounter} - Error: " + ex.Message);
+                            MessageBox.Show(
+                                "There is an error now please open issue on github for fix.\nError code: 2"
+                            );
+                        }
+                        #endregion
                     }
                     catch (Exception ex)
                     {
-                        logger.Log($"TestNum: {testCounter} - Error: " + ex.Message);
-                        MessageBox.Show(
-                            "There is an error now please open issue on github for fix.\nError code: 2"
-                        );
+                        logger.Log("Error: " + ex.Message);
                     }
-                    #endregion
-                }
-                catch (Exception ex)
-                {
-                    logger.Log("Error: " + ex.Message);
-                }
 
+                    endprogress:
+                    driver.Quit();
+                    logger.Log($"{user.name} - Progress done.");
                 endprogress:
                 driver.Quit();
                 logger.Log($"{user.name} - Progress done.");
+                }
             }
             catch (Exception ex)
             {
@@ -769,6 +808,18 @@ namespace AutoPixAiCreditClaimer.Views
         #endregion
 
         #endregion
+
+        private async void ClaimWorker_DoWork(
+            object sender,
+            System.ComponentModel.DoWorkEventArgs e
+        )
+        {
+            foreach (var user in userList)
+            {
+                await runClaimProgress(user);
+                Thread.Sleep(49);
+            }
+        }
 
         private void btnStartClaim_Click(object sender, EventArgs e)
         {
