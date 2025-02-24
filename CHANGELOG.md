@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.1...HEAD)
+#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.2...HEAD)
+
+#### [v1.3.2](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.1...v1.3.2)
+
+24 February 2025 
 
 - login fix and some code optimizations [`32daa52`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/32daa5263e93459bcf8ad29fcef16df648ab3f5d)
 - current process info label added [`f39555d`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/f39555d602a6a3fbd3d94275ca56cbc662de8138)
@@ -10,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - new popup problem fixed [`60d024a`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/60d024afb59a4338aa8a2b2cf7a05b4799461742)
 - some readme patches [`03ff21b`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/03ff21b7e0ebff62ff943ed4f4e4a3f0e174a6ac)
 - dependabot configuration [`5997932`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/599793227dc9b98880da5ca29fec68c8301cca89)
+- update v1.3.2 [`3cf613b`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/3cf613be5128cd506cb959e7e7e113cf3cb13478)
 - workflow fix [`3614f41`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/3614f412cd4a9a03a34ed1d4859037ee546e7bda)
 - changelog config [`54471ac`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/54471ac56b12d1d1854d60b2de1e08e104b9677b)
 - update driver [`26301bd`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/26301bd1ddfb3d73166c9ba6f2e690b3523a99c8)
