@@ -252,7 +252,7 @@
             // lblInfo
             // 
             lblInfo.AutoSize = true;
-            lblInfo.Location = new Point(107, 6);
+            lblInfo.Location = new Point(96, 6);
             lblInfo.Name = "lblInfo";
             lblInfo.Size = new Size(57, 17);
             lblInfo.TabIndex = 0;

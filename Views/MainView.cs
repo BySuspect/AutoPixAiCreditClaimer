@@ -569,7 +569,7 @@ namespace AutoPixAiCreditClaimer.Views
                         {
                             logger.Log($"TestNum: {testCounter} - Error: " + ex.Message);
                             MessageBox.Show(
-                                "There is an error now please open issue on github for fix.\nError code: 2"
+                                $"There is an error now please open issue on github for fix.\nError code: 2 Error num: {testCounter}"
                             );
                         }
                         #endregion
