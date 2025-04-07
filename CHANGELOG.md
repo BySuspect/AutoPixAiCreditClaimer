@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 #### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.2...HEAD)
 
+- chore(deps): nuget update: bump Selenium.WebDriver from 4.30.0 to 4.31.0 [`#22`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/22)
 - chore(deps): nuget update: bump Selenium.WebDriver from 4.29.0 to 4.30.0 [`#21`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/21)
 
 #### [v1.3.2](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.1...v1.3.2)
