@@ -29,7 +29,7 @@ jobs:
       - name: Generate Changelog
         run: |
           git fetch --all
-          auto-changelog --unreleased --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml)' --tag-pattern '(V.|v.)' --output CHANGELOG.md --backfill-limit false
+          auto-changelog --unreleased --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml|\.hbs|^chore\(deps\):|bump|Bump)' --tag-pattern '(V.|v.)' --output CHANGELOG.md --backfill-limit false
 
       - name: Commit and push changelog
         env:

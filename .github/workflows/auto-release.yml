@@ -106,7 +106,7 @@ jobs:
         if: env.EndProcess == 'false'
         run: |
           git fetch --tags
-          auto-changelog --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml|\.hbs)' --tag-pattern '(.*)' --output RELEASE.md --backfill-limit false --starting-version ${{ env.new_tag }}
+          auto-changelog --template .github/changelog.hbs --hide-credit --commit-limit false --ignore-commit-pattern '(\.md|\.yml|\.hbs|^chore\(deps\):|bump|Bump)' --tag-pattern '(.*)' --output RELEASE.md --backfill-limit false --starting-version ${{ env.new_tag }}
 
       - name: Create Release for new tag
         if: env.EndProcess == 'false'
