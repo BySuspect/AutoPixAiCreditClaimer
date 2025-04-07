@@ -2,10 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.2...HEAD)
+#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.3...HEAD)
+
+#### [v1.3.3](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.2...v1.3.3)
+
+7 April 2025 
 
 - chore(deps): nuget update: bump Selenium.WebDriver from 4.30.0 to 4.31.0 [`#22`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/22)
 - chore(deps): nuget update: bump Selenium.WebDriver from 4.29.0 to 4.30.0 [`#21`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/21)
+- profile navigation and claim bug fixed [`23d4dc2`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/23d4dc212fd4e14fbcd3290e978537ead8e72af0)
 
 #### [v1.3.2](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.1...v1.3.2)
 
