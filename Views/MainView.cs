@@ -129,9 +129,7 @@ namespace AutoPixAiCreditClaimer.Views
                 ChromeOptions options = new ChromeOptions();
                 if (!SettingsHelper.Settings.showBrowserOnClaimProgress)
                 {
-#if !DEBUG
                     options.AddArgument("--headless=new");
-#endif
                 }
                 options.AddArguments("--window-size=1,1");
                 options.AddArgument("--force-device-scale-factor=0.70");
@@ -266,7 +264,9 @@ namespace AutoPixAiCreditClaimer.Views
                                     // Check if the profile has an image and click on it
                                     driver
                                         .FindElement(
-                                            By.CssSelector("header > span:nth-of-type(4) > img")
+                                            By.XPath(
+                                                "//*[@id=\"root\"]/div/div[1]/header/div/span/img"
+                                            )
                                         )
                                         .Click();
                                     Thread.Sleep(300);
@@ -279,7 +279,9 @@ namespace AutoPixAiCreditClaimer.Views
                                         // If the profile doesn't have an image, click on a different element
                                         driver
                                             .FindElement(
-                                                By.CssSelector("header > span:nth-of-type(4) > div")
+                                                By.XPath(
+                                                    "//*[@id=\"root\"]/div/div[1]/header/div/span/div"
+                                                )
                                             )
                                             .Click();
                                         Thread.Sleep(300);
@@ -389,8 +391,8 @@ namespace AutoPixAiCreditClaimer.Views
                         {
                             string claimBtnText = driver
                                 .FindElement(
-                                    By.CssSelector(
-                                        "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                    By.XPath(
+                                        "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button/span"
                                     )
                                 )
                                 .GetAttribute("innerHTML");
@@ -400,8 +402,8 @@ namespace AutoPixAiCreditClaimer.Views
                                 // Click on the claim button
                                 driver
                                     .FindElement(
-                                        By.CssSelector(
-                                            "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+                                        By.XPath(
+                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button"
                                         )
                                     )
                                     .Click();
@@ -410,8 +412,8 @@ namespace AutoPixAiCreditClaimer.Views
                                 Thread.Sleep(300);
                                 claimBtnText = driver
                                     .FindElement(
-                                        By.CssSelector(
-                                            "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                        By.XPath(
+                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button/span"
                                         )
                                     )
                                     .GetAttribute("innerHTML");
@@ -530,8 +532,8 @@ namespace AutoPixAiCreditClaimer.Views
                                 {
                                     claimBtnText = driver
                                         .FindElement(
-                                            By.CssSelector(
-                                                "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
+                                            By.XPath(
+                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button/span"
                                             )
                                         )
                                         .GetAttribute("innerHTML")
