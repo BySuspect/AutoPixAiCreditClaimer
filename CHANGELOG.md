@@ -4,12 +4,12 @@ All notable changes to this project will be documented in this file.
 
 #### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.3...HEAD)
 
+- some workflow changes [`15af626`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/15af626b0f3c60e3c5dd3a2ff75e61520b9322e0)
+
 #### [v1.3.3](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.2...v1.3.3)
 
 7 April 2025 
 
-- chore(deps): nuget update: bump Selenium.WebDriver from 4.30.0 to 4.31.0 [`#22`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/22)
-- chore(deps): nuget update: bump Selenium.WebDriver from 4.29.0 to 4.30.0 [`#21`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/21)
 - profile navigation and claim bug fixed [`23d4dc2`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/23d4dc212fd4e14fbcd3290e978537ead8e72af0)
 
 #### [v1.3.2](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.1...v1.3.2)
@@ -42,8 +42,6 @@ All notable changes to this project will be documented in this file.
 1 October 2024 
 
 - Converting to dotnet [`#19`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/19)
-- Bump Selenium.WebDriver from 4.23.0 to 4.24.0 in the nuget group [`#16`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/16)
-- Bump actions/setup-node from 3 to 4 in the actions group [`#17`](https://github.com/BySuspect/AutoPixAiCreditClaimer/pull/17)
 - cleanup fresh dotnet base [`9d98995`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/9d98995a809012fdc8dc32b1f158051fa9156359)
 - full working converted to dotnet [`41c92f1`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/41c92f1aa7d55e0ec3a60545a3b95a2511d33540)
 - some minor changes and ready to publish [`9349de5`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/9349de559797bc2fc539e1330605d0545c4e3d0e)
@@ -56,7 +54,6 @@ All notable changes to this project will be documented in this file.
 
 - cleanup and workflows update [`549279a`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/549279a599a9f9ce9d605b2c7d8be1b5ca1e85ba)
 - hotfix profile navigation [`0450014`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/04500148aeb717b18cfc2aee92597ff7300f2fb0)
-- Create changelog.hbs [`b92f2a8`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/b92f2a805417e36bba44eb7b5c516e82e406ddff)
 
 #### [V1.1.9](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/V1.1.8...V1.1.9)
 
