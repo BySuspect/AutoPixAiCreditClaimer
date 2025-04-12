@@ -171,7 +171,7 @@ namespace AutoPixAiCreditClaimer.Views
                             {
                                 logger.Log("*****Can't navigate to login page*****");
                                 MessageBox.Show(
-                                    "There is an error now please open issue on GitHub for fix.\nError code: 3"
+                                    "There is an error now please try again later. If the error continues, please open an issue on GitHub for a fix.\nError code: 3"
                                 );
                                 goto endprogress;
                             }
@@ -198,7 +198,7 @@ namespace AutoPixAiCreditClaimer.Views
                         Thread.Sleep(100);
                         try
                         {
-                            string errorText = driver
+                            var errorText = driver
                                 .FindElement(
                                     By.CssSelector(
                                         "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span"
@@ -212,6 +212,12 @@ namespace AutoPixAiCreditClaimer.Views
                                 MessageBox.Show(
                                     "There is a network error!\nCheck your connection."
                                 );
+                                goto endprogress;
+                            }
+                            else if (!string.IsNullOrEmpty(errorText))
+                            {
+                                logger.Log("*****Login Error*****");
+                                MessageBox.Show("There is an error!\n" + errorText);
                                 goto endprogress;
                             }
                         }
@@ -315,7 +321,7 @@ namespace AutoPixAiCreditClaimer.Views
                                                 {
                                                     logger.Log("*****Cant skip popup*****");
                                                     MessageBox.Show(
-                                                        "There is an error now please open issue on github for fix.\nError code: 0"
+                                                        "There is an error now please try again later. If the error continues, please open an issue on GitHub for a fix.\nError code: 0"
                                                     );
                                                     goto endprogress;
                                                 }
@@ -487,7 +493,7 @@ namespace AutoPixAiCreditClaimer.Views
                             catch
                             {
                                 MessageBox.Show(
-                                    "Something is broken right now. Please open an issue on GitHub!\nError code: 1"
+                                    "There is an error now please try again later. If the error continues, please open an issue on GitHub for a fix.\nError code: 1"
                                 );
                             }
                         }
@@ -597,7 +603,7 @@ namespace AutoPixAiCreditClaimer.Views
                         {
                             logger.Log($"TestNum: {testCounter} - Error: " + ex.Message);
                             MessageBox.Show(
-                                $"There is an error now please open issue on github for fix.\nError code: 2 Error num: {testCounter}"
+                                $"There is an error now please try again later. If the error continues, please open an issue on GitHub for a fix.\nError code: 2 Error num: {testCounter}"
                             );
                         }
                         #endregion
