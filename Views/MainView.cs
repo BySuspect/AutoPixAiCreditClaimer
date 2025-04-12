@@ -407,7 +407,33 @@ namespace AutoPixAiCreditClaimer.Views
                                         )
                                     )
                                     .Click();
-                                Thread.Sleep(300);
+
+                                int claimAtemptCounter = 0;
+
+                                while (true)
+                                {
+                                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                                    var claimBtn = driver
+                                        .FindElement(
+                                            By.XPath(
+                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button"
+                                            )
+                                        )
+                                        .GetAttribute("innerHTML");
+
+                                    if (claimBtn.Contains("Claimed"))
+                                        break;
+
+                                    if (claimAtemptCounter >= 30)
+                                    {
+                                        logger.Log("*****Claim button error*****");
+                                        MessageBox.Show(
+                                            "There is an error now please try again later. If the error continues, please open an issue on GitHub for a fix.\nError code: 55"
+                                        );
+                                        goto endprogress;
+                                    }
+                                    claimAtemptCounter++;
+                                }
                                 driver.Navigate().Refresh();
                                 Thread.Sleep(300);
                                 claimBtnText = driver
@@ -448,8 +474,8 @@ namespace AutoPixAiCreditClaimer.Views
                                     // Check is page style changed
                                     driver
                                         .FindElement(
-                                            By.CssSelector(
-                                                "section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+                                            By.XPath(
+                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button"
                                             )
                                         )
                                         .Click();
