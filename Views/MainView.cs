@@ -108,7 +108,7 @@ namespace AutoPixAiCreditClaimer.Views
             string logPath = Path.Combine(
                 References.AppFilesPath,
                 "Logs",
-                $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt"
+                $"Log{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.log"
             );
             logger = new LoggingHelper(logPath);
             logger.Log($"App version: {System.Windows.Forms.Application.ProductVersion}");
@@ -503,6 +503,7 @@ namespace AutoPixAiCreditClaimer.Views
 
                         logger.Log("Claim checking from history");
                         int testCounter = 0;
+
                         #region Open credit history tab
                         try
                         {
