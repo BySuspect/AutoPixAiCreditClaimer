@@ -343,11 +343,7 @@ namespace AutoPixAiCreditClaimer.Views
                         try
                         {
                             driver
-                                .FindElement(
-                                    By.CssSelector(
-                                        "ul[role='menu'] > li[role='menuitem']:nth-of-type(1)"
-                                    )
-                                )
+                                .FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/ul/a"))
                                 .Click();
                             Thread.Sleep(300);
                         }
