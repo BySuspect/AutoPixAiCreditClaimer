@@ -192,6 +192,8 @@ namespace AutoPixAiCreditClaimer.Views
 
                     // Submit the login form
                     driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+                    driver.FindElement(By.CssSelector("button[type='submit']")).Click();
+                    //TODO: there is some times has login issue with clicking button
 
                     while (true)
                     {
