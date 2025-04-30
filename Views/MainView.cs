@@ -515,7 +515,7 @@ namespace AutoPixAiCreditClaimer.Views
                                 "arguments[0].click();",
                                 driver.FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                        "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[5]"
                                     )
                                 )
                             );
@@ -528,7 +528,7 @@ namespace AutoPixAiCreditClaimer.Views
                                 driver
                                     .FindElement(
                                         By.XPath(
-                                            "//*[@id=\"root\"]/div[1]/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
+                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[5]"
                                         )
                                     )
                                     .GetAttribute("aria-selected")
