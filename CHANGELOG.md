@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.6...HEAD)
+#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.7...HEAD)
+
+#### [v1.3.7](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.6...v1.3.7)
+
+4 May 2025 
+
+- fixed popup issue #25 [`8f27723`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/8f27723cd5cf92553374b5dc44b0d9309ed26e9a)
+- update driver [`a062052`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/a0620526a8a67ca45f3d90b9fec605f5d98ae082)
 
 #### [v1.3.6](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.5...v1.3.6)
 
