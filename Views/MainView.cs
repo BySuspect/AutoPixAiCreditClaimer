@@ -131,6 +131,7 @@ namespace AutoPixAiCreditClaimer.Views
                 {
                     options.AddArgument("--headless=new");
                 }
+                options.AddArgument("--lang=en");
                 options.AddArguments("--window-size=1,1");
                 options.AddArgument("--force-device-scale-factor=0.70");
                 options.AddArgument("--enable-automation");
@@ -305,11 +306,8 @@ namespace AutoPixAiCreditClaimer.Views
                                                     "svg[data-testid='ReportProblemOutlinedIcon']"
                                                 )
                                             );
-                                            notifyIcon.ShowBalloonTip(
-                                                1000,
-                                                "Error!",
-                                                $"{user.name} is an Invalid Account",
-                                                ToolTipIcon.Error
+                                            MessageBox.Show(
+                                                $"{user.name} is an Invalid Account or theres a network error now please try again later."
                                             );
                                             goto endprogress;
                                         }
@@ -639,35 +637,52 @@ namespace AutoPixAiCreditClaimer.Views
             Console.WriteLine("Checking for popup");
             try
             {
-                driver
-                    .FindElement(
-                        By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")
-                    )
-                    .Click();
+                IWebElement element = driver.FindElement(
+                    By.XPath("/html/body/div[4]/div/div/button")
+                );
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                js.ExecuteScript("arguments[0].click();", element);
+
                 return true;
             }
             catch
             {
                 try
                 {
-                    driver
-                        .FindElement(By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button"))
-                        .Click();
+                    IWebElement element = driver.FindElement(
+                        By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/div/div[2]/div/button")
+                    );
+                    IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                    js.ExecuteScript("arguments[0].click();", element);
+
                     return true;
                 }
                 catch
                 {
                     try
                     {
-                        ((IJavaScriptExecutor)driver).ExecuteScript(
-                            "arguments[0].click();",
-                            driver.FindElement(By.CssSelector("button[aria-label='Dismiss']"))
+                        IWebElement element = driver.FindElement(
+                            By.XPath("//*[@id=\"app\"]/body/div[2]/div[3]/div/div/button")
                         );
+                        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                        js.ExecuteScript("arguments[0].click();", element);
+
                         return true;
                     }
                     catch
                     {
-                        return false;
+                        try
+                        {
+                            ((IJavaScriptExecutor)driver).ExecuteScript(
+                                "arguments[0].click();",
+                                driver.FindElement(By.CssSelector("button[aria-label='Dismiss']"))
+                            );
+                            return true;
+                        }
+                        catch
+                        {
+                            return false;
+                        }
                     }
                 }
             }
