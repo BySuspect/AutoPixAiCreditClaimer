@@ -394,7 +394,7 @@ namespace AutoPixAiCreditClaimer.Views
                             string claimBtnText = driver
                                 .FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button/span"
+                                        "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[2]/div[2]/button/span"
                                     )
                                 )
                                 .GetAttribute("innerHTML");
@@ -405,7 +405,7 @@ namespace AutoPixAiCreditClaimer.Views
                                 driver
                                     .FindElement(
                                         By.XPath(
-                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button"
+                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[2]/div[2]/button"
                                         )
                                     )
                                     .Click();
@@ -418,7 +418,7 @@ namespace AutoPixAiCreditClaimer.Views
                                     var claimBtn = driver
                                         .FindElement(
                                             By.XPath(
-                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button"
+                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[2]/div[2]/button"
                                             )
                                         )
                                         .GetAttribute("innerHTML");
@@ -441,7 +441,7 @@ namespace AutoPixAiCreditClaimer.Views
                                 claimBtnText = driver
                                     .FindElement(
                                         By.XPath(
-                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button/span"
+                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[2]/div[2]/button/span"
                                         )
                                     )
                                     .GetAttribute("innerHTML");
@@ -477,7 +477,7 @@ namespace AutoPixAiCreditClaimer.Views
                                     driver
                                         .FindElement(
                                             By.XPath(
-                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button"
+                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[2]/div[2]/button"
                                             )
                                         )
                                         .Click();
@@ -562,7 +562,7 @@ namespace AutoPixAiCreditClaimer.Views
                                     claimBtnText = driver
                                         .FindElement(
                                             By.XPath(
-                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[3]/div[2]/button/span"
+                                                "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[1]/section/div/div[2]/div[2]/button/span"
                                             )
                                         )
                                         .GetAttribute("innerHTML")
