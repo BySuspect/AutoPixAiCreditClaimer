@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.7...HEAD)
+#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.8...HEAD)
+
+#### [v1.3.8](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.7...v1.3.8)
+
+13 May 2025 
+
+- fixed #27 [`#27`](https://github.com/BySuspect/AutoPixAiCreditClaimer/issues/27)
 
 #### [v1.3.7](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.6...v1.3.7)
 
