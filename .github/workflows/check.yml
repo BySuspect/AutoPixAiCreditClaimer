@@ -19,10 +19,12 @@ jobs:
     runs-on: [windows-latest]
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
       - name: Restore dependencies
         run: dotnet restore
 
@@ -35,5 +37,9 @@ jobs:
       - name: Install CSharpier
         run: dotnet tool install -g csharpier
 
+      - name: Add CSharpier to PATH
+        shell: bash
+        run: echo "::add-path::${HOME}/.dotnet/tools"
+
       - name: Run CSharpier
-        run: dotnet csharpier . --check
+        run: csharpier . --check
