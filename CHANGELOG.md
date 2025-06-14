@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 #### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.8...HEAD)
 
+- Update Selenium.WebDriver to 4.33.0 [`3dc95ba`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/3dc95bae59dc1a2f115c35da1d033a01512eb5bd)
+
 #### [v1.3.8](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.7...v1.3.8)
 
 13 May 2025 
