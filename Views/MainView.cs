@@ -281,7 +281,7 @@ namespace AutoPixAiCreditClaimer.Views
                                     driver
                                         .FindElement(
                                             By.XPath(
-                                                "//*[@id=\"root\"]/div/div[1]/header/div/span/img"
+                                                "//*[@id=\"root\"]/div/div[1]/header/button[2]/div/span/div/img"
                                             )
                                         )
                                         .Click();
@@ -296,7 +296,7 @@ namespace AutoPixAiCreditClaimer.Views
                                         driver
                                             .FindElement(
                                                 By.XPath(
-                                                    "//*[@id=\"root\"]/div/div[1]/header/div/span/div"
+                                                    "//*[@id=\"root\"]/div/div[1]/header/button[2]/div/span/div"
                                                 )
                                             )
                                             .Click();
@@ -350,7 +350,7 @@ namespace AutoPixAiCreditClaimer.Views
                         try
                         {
                             driver
-                                .FindElement(By.XPath("//*[@id=\"app\"]/body/div[4]/div[3]/ul/a"))
+                                .FindElement(By.XPath("/html/body/div[6]/div/div[2]/a[1]/div"))
                                 .Click();
                             Thread.Sleep(300);
                         }
