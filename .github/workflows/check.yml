@@ -36,9 +36,6 @@ jobs:
 
       - name: Install CSharpier
         run: dotnet tool install -g csharpier
-
-      - name: Add CSharpier to PATH
-        run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
-
+        
       - name: Run CSharpier
-        run: csharpier check .
+        run: dotnet csharpier check .
