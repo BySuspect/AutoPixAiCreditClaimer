@@ -225,9 +225,16 @@ namespace AutoPixAiCreditClaimer.Views
                             }
                         }
                         catch { }
+
+                        Thread.Sleep(1000);
+
                         var url = driver.Url.TrimEnd('/');
+
                         if (url is "https://pixai.art")
                             break;
+
+                        if (url is "https://pixai.art/login")
+                            driver.FindElement(By.CssSelector("button[type='submit']")).Click();
                     }
                     #endregion
 
@@ -235,7 +242,7 @@ namespace AutoPixAiCreditClaimer.Views
                         $"{user.name} - Successfully logged in. - isPopupClosed:{isPopupClosed}"
                     );
 
-                    Thread.Sleep(300);
+                    Thread.Sleep(1000);
 
                     /* After Login */
 
