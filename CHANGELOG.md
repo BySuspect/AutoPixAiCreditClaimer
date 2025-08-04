@@ -2,8 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.8...HEAD)
+#### [Unreleased](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.9...HEAD)
 
+#### [v1.3.9](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.8...v1.3.9)
+
+4 August 2025 
+
+- some login issue fix [`ee5a80c`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/ee5a80c86f7ff4f24f4fe60e537e3101c96b2c20)
+- profile navigation fix [`b52ee5c`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/b52ee5c109ce70640f15e03fc7392b0c2515c49e)
+- claim page history check fix [`087f613`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/087f613a73a090c9ed0cc09445f3cece2a1aada1)
 - Update Selenium.WebDriver to 4.33.0 [`3dc95ba`](https://github.com/BySuspect/AutoPixAiCreditClaimer/commit/3dc95bae59dc1a2f115c35da1d033a01512eb5bd)
 
 #### [v1.3.8](https://github.com/BySuspect/AutoPixAiCreditClaimer/compare/v1.3.7...v1.3.8)
