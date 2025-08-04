@@ -198,7 +198,6 @@ namespace AutoPixAiCreditClaimer.Views
 
                     while (true)
                     {
-                        Thread.Sleep(100);
                         try
                         {
                             var errorText = driver
@@ -520,7 +519,7 @@ namespace AutoPixAiCreditClaimer.Views
                                 "arguments[0].click();",
                                 driver.FindElement(
                                     By.XPath(
-                                        "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[5]"
+                                        "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                     )
                                 )
                             );
@@ -533,7 +532,7 @@ namespace AutoPixAiCreditClaimer.Views
                                 driver
                                     .FindElement(
                                         By.XPath(
-                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[5]"
+                                            "//*[@id=\"root\"]/div/div[2]/div/div/div/div/div[2]/div[1]/div[2]/div/a[4]"
                                         )
                                     )
                                     .GetAttribute("aria-selected")
