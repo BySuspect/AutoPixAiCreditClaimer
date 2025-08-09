@@ -10,9 +10,9 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>1.3.9</Version>
-        <FileVersion>1.3.9</FileVersion>
-        <AssemblyVersion>1.3.9</AssemblyVersion>
+        <Version>1.3.10</Version>
+        <FileVersion>1.3.10</FileVersion>
+        <AssemblyVersion>1.3.10</AssemblyVersion>
         <AssemblyName>AutoPixAiCreditClaimer</AssemblyName>
         <Authors>BySuspect</Authors>
         <Description>Automation for Pixai.art</Description>
