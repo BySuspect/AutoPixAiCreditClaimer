@@ -349,7 +349,7 @@ namespace AutoPixAiCreditClaimer.Views
                         try
                         {
                             driver
-                                .FindElement(By.XPath("/html/body/div[6]/div/div[2]/a[1]/div"))
+                                .FindElement(By.XPath("/html/body/div[5]/div/div[2]/a[1]"))
                                 .Click();
                             Thread.Sleep(300);
                         }
