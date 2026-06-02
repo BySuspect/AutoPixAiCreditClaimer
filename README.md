@@ -1,4 +1,15 @@
 # Pixai Auto Credit Claimer
+```diff
+- ## This app has been discontinued. Pixai has added a robot check for claiming, and I don't have the time anymore.
+
+```
+
+
+
+
+
+
+
 
 ![Downloads](https://img.shields.io/github/downloads/BySuspect/AutoPixAiCreditClaimer/total)
 
